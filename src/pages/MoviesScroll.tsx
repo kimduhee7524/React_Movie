@@ -1,0 +1,44 @@
+import PageLayout from "@/layouts/PageLayout";
+import ErrorFallback from "@/components/share/ErrorFallback";
+import PopularMoviesScroll from "@/components/movie/PopularMoviesScroll";
+import MoviesSkeleton from "@/components/skeleton/MoviesSkeleton";
+import SelectBox from "@/components/share/SelectBox";
+import { languageOptions } from "@/constants/selectOptions";
+import { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+export default function MoviesScroll() {
+  const [language, setLanguage] = useState("en-US");
+
+  return (
+    <PageLayout title="인기 영화 (Infinite Scroll)">
+      <div className="flex flex-wrap items-center gap-4">
+        <SelectBox
+          label="Language"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          options={languageOptions}
+        />
+      </div>
+
+      <ErrorBoundary
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <ErrorFallback
+            error={error}
+            resetErrorBoundary={resetErrorBoundary}
+          />
+        )}
+      >
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <MoviesSkeleton />
+            </div>
+          }
+        >
+          <PopularMoviesScroll language={language} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageLayout>
+  );
+}

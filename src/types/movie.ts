@@ -32,7 +32,6 @@ export interface SearchedMovieType {
   video: boolean;
 }
 
-/** ✅ 공통 페이징 응답 타입 */
 export interface PaginatedResponse<T> {
   page: number;
   results: T[];

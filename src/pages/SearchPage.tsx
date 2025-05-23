@@ -1,10 +1,10 @@
-import { useSearchParams } from "react-router-dom";
-import { useSearchMoviesInfinite } from "@/hooks/useMovies";
-import Movie from "@/components/movie/Movie";
+import { useSearchParams } from 'react-router-dom';
+import { useSearchMoviesInfinite } from '@/hooks/useMovies';
+import Movie from '@/components/movie/Movie';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("query")?.trim() || "";
+  const query = searchParams.get('query')?.trim() || '';
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSearchMoviesInfinite({ query });
@@ -23,7 +23,6 @@ export default function SearchPage() {
         )}
       </div>
 
-      {/* 더 보기 버튼 */}
       {hasNextPage && (
         <div className="mt-6 flex justify-center">
           <button
@@ -31,12 +30,11 @@ export default function SearchPage() {
             disabled={isFetchingNextPage}
             className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
           >
-            {isFetchingNextPage ? "불러오는 중..." : "더 보기"}
+            {isFetchingNextPage ? '불러오는 중...' : '더 보기'}
           </button>
         </div>
       )}
 
-      {/* 끝났을 때 메시지 */}
       {!hasNextPage && data?.pages.length > 0 && (
         <p className="mt-6 text-center text-sm text-gray-500">
           마지막 결과입니다.

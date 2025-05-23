@@ -1,6 +1,6 @@
-import fallbackPoster from "@/assets/tempMovie.png";
-import { MovieType } from "@/types/movie";
-import { useState } from "react";
+import fallbackPoster from '@/assets/tempMovie.png';
+import { MovieType } from '@/types/movie';
+import { useState } from 'react';
 
 const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
 
@@ -14,7 +14,7 @@ export default function Movie({ movie }: { movie: MovieType }) {
     <div className="w-[200px] bg-white rounded-2xl shadow-lg overflow-hidden m-3 transform transition duration-300 hover:scale-105 hover:shadow-xl">
       <img
         src={imgSrc}
-        alt={movie.title || "Movie poster"}
+        alt={movie.title || 'Movie poster'}
         onError={() => setImgSrc(fallbackPoster)}
         className="w-[200px] h-[280px] object-cover"
       />

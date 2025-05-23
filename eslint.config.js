@@ -1,9 +1,9 @@
+// eslint.config.js
 import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
-import prettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
@@ -21,7 +21,7 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
-      eslintConfigPrettier,
+      eslintConfigPrettier, // Prettier와 충돌 방지
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -31,7 +31,6 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      prettier: prettier,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -39,17 +38,9 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      'prettier/prettier': [
-        'error',
-        {
-          singleQuote: true,
-          semi: true,
-          tabWidth: 2,
-          trailingComma: 'es5',
-        },
-      ],
-      '@typescript-eslint/no-unused-vars': 'warn', // 사용하지 않는 변수 경고
+      '@typescript-eslint/no-unused-vars': 'warn',
       'react/react-in-jsx-scope': 'off',
     },
   }
 );
+

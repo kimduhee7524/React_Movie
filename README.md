@@ -8,7 +8,7 @@
 
 ```bash
 pnpm install
-pnpm start
+pnpm dev
 ```
 
 ## 🛠 기술 스택

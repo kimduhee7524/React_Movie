@@ -1,14 +1,14 @@
-import PageLayout from "@/layouts/PageLayout";
-import ErrorFallback from "@/components/share/ErrorFallback";
-import PopularMoviesScroll from "@/components/movie/PopularMoviesScroll";
-import MoviesSkeleton from "@/components/skeleton/MoviesSkeleton";
-import SelectBox from "@/components/share/SelectBox";
-import { languageOptions } from "@/constants/selectOptions";
-import { Suspense, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import PageLayout from '@/layouts/PageLayout';
+import ErrorFallback from '@/components/share/ErrorFallback';
+import PopularMoviesScroll from '@/components/movie/PopularMoviesScroll';
+import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
+import SelectBox from '@/components/share/SelectBox';
+import { LANGUAGE_OPTIONS } from '@/constants/selectOptions';
+import { Suspense, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export default function MoviesScroll() {
-  const [language, setLanguage] = useState("en-US");
+  const [language, setLanguage] = useState('en-US');
 
   return (
     <PageLayout title="인기 영화 (Infinite Scroll)">
@@ -17,7 +17,7 @@ export default function MoviesScroll() {
           label="Language"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          options={languageOptions}
+          options={LANGUAGE_OPTIONS}
         />
       </div>
 

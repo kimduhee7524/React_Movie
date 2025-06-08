@@ -3,7 +3,7 @@ import ErrorFallback from '@/components/share/ErrorFallback';
 import PopularMoviesScrollVirtual from '@/components/movie/PopularMoviesScrollVirtual';
 import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
 import SelectBox from '@/components/share/SelectBox';
-import { languageOptions } from '@/constants/selectOptions';
+import { LANGUAGE_OPTIONS } from '@/constants/selectOptions';
 import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -17,7 +17,7 @@ export default function MoviesScrollVirtual() {
           label="Language"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          options={languageOptions}
+          options={LANGUAGE_OPTIONS}
         />
       </div>
 

@@ -11,13 +11,12 @@ export const apiClient = axios.create({
   },
 });
 
-// 예시 코드 
-// 아래와 같이 Interceptor를 활용해서 인증처리로직을 집어넣을 수 있음 
+// 예시 코드
+// 아래와 같이 Interceptor를 활용해서 인증처리로직을 집어넣을 수 있음
 // 세션 타입 유틸리티 함수
 // const hasAccessToken = (session: any): session is { accessToken: string } => {
 //   return session && typeof session.accessToken === 'string';
 // };
-
 
 // // 요청 핸들러 설정
 // const handleRequest = async (config: InternalAxiosRequestConfig) => {
@@ -36,7 +35,6 @@ export const apiClient = axios.create({
 //       return config;
 //     }
 
-     
 //     config.headers.Authorization = `Bearer ${session.accessToken}`;
 //     console.log('요청에 인증 토큰 추가됨');
 //     return config;

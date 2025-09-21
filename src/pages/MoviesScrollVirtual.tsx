@@ -16,7 +16,7 @@ export default function MoviesScrollVirtual() {
         <SelectBox
           label="Language"
           value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          onChange={setLanguage}
           options={LANGUAGE_OPTIONS}
         />
       </div>

@@ -11,22 +11,29 @@ export default function Movie({ movie }: { movie: MovieType }) {
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
   return (
-    <div className="w-[200px] bg-white rounded-2xl shadow-lg overflow-hidden m-3 transform transition duration-300 hover:scale-105 hover:shadow-xl">
-      <img
-        src={imgSrc}
-        alt={movie.title || 'Movie poster'}
-        onError={() => setImgSrc(fallbackPoster)}
-        className="w-[200px] h-[280px] object-cover"
-      />
+    <div className="group w-[200px] bg-card/80 backdrop-blur-sm rounded-3xl overflow-hidden m-3 hip-hover neon-border hover:glow-purple transition-all duration-500">
+      <div className="relative overflow-hidden">
+        <img
+          src={imgSrc}
+          alt={movie.title || 'Movie poster'}
+          onError={() => setImgSrc(fallbackPoster)}
+          className="w-[200px] h-[280px] object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm text-accent-foreground px-2 py-1 rounded-full text-xs font-medium">
+          ⭐ {movie.vote_average.toFixed(1)}
+        </div>
+      </div>
 
-      <div className="p-3 ">
-        <h4 className="text-base font-semibold text-gray-900 mb-1 line-clamp-1">
+      <div className="p-4 space-y-2">
+        <h4 className="text-base font-bold text-foreground mb-1 line-clamp-1 group-hover:text-accent transition-colors duration-300">
           {movie.title}
         </h4>
-        <div className="text-sm text-gray-500 flex items-center gap-2">
-          <span>⭐ {movie.vote_average.toFixed(1)}</span>
-          <span className="text-xs">·</span>
-          <span>{movie.release_date}</span>
+        <div className="text-sm text-muted-foreground flex items-center gap-2">
+          <span className="inline-flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            {movie.release_date}
+          </span>
         </div>
       </div>
     </div>

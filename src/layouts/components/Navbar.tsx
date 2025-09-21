@@ -1,9 +1,21 @@
 import { Link, useLocation } from 'react-router-dom';
 import { NAV_LINKS } from '@/constants/navLinks';
+import { LANGUAGE_OPTIONS } from '@/constants/selectOptions';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { movieQueries } from '@/queries/movieQueries';
 import SearchInput from '@/components/share/SearchInput';
+import SelectBox from '@/components/share/SelectBox';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Navbar() {
   const location = useLocation();
+  const { language, setLanguage } = useLanguageStore();
+  const queryClient = useQueryClient();
+
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    queryClient.invalidateQueries({ queryKey: movieQueries.keys.all });
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg glow-purple-sm">
@@ -34,6 +46,14 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
+          <div className="hidden sm:block">
+            <SelectBox
+              value={language}
+              onChange={handleLanguageChange}
+              options={LANGUAGE_OPTIONS}
+              placeholder="언어 선택"
+            />
+          </div>
           <SearchInput />
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-accent to-primary animate-pulse"></div>
         </div>

@@ -1,16 +1,18 @@
 import { VirtuosoGrid } from 'react-virtuoso';
 import { useSearchParams } from 'react-router-dom';
 import { useSearchMoviesInfinite } from '@/hooks/useMovies';
-import Movie from '@/components/movie/Movie';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
 import { MovieType } from '@/types/movie';
 
 export default function SearchMovie() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query')?.trim() || '';
+  const { language } = useLanguageStore();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSearchMoviesInfinite({ query });
+    useSearchMoviesInfinite({ query, language });
 
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
 

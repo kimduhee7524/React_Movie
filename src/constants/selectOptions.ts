@@ -1,6 +1,5 @@
 export const LANGUAGE_OPTIONS = [
-    { label: "English", value: "en-US" },
-    { label: "Korean", value: "ko-KR" },
-    { label: "Japanese", value: "ja-JP" },
-  ];
-  
+  { label: 'Korean', value: 'ko-KR' },
+  { label: 'English', value: 'en-US' },
+  { label: 'Japanese', value: 'ja-JP' },
+];

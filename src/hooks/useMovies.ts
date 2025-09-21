@@ -4,26 +4,36 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import { GetSearchMoviesParams, GetMoviesParams } from '@/types/movie';
-import { queryKeys } from '@/types/queryKey';
+import { movieQueries } from '@/queries/movieQueries';
 
-
-
-// 개선된 훅들 - queryKeys 팩토리 사용
-export const useSuspensePopularMovies = ({ page = 1, language = 'en-US' }: GetMoviesParams = {}) => {
-  return useSuspenseQuery({...queryKeys.movie.popular({ page, language }), select: (data) => data.results});
+export const useSuspensePopularMovies = (params: GetMoviesParams = {}) => {
+  return useSuspenseQuery({
+    ...movieQueries.popular(params),
+    select: (data) => data.results,
+  });
 };
 
-export const usePopularMovies = ({ page = 1, language = 'en-US' }: GetMoviesParams = {}) => {
-  return useQuery(queryKeys.movie.popular({ page, language }));
+export const usePopularMovies = (params: GetMoviesParams = {}) => {
+  return useQuery(movieQueries.popular(params));
 };
 
 export const usePopularMoviesInfinite = (language = 'en-US') => {
-  return useSuspenseInfiniteQuery(queryKeys.movie.popularInfinite(language));
+  return useSuspenseInfiniteQuery(movieQueries.popularInfinite(language));
 };
 
-export const useSearchMoviesInfinite = ({
-  query,
-  language = 'en-US',
-}: GetSearchMoviesParams) => {
-  return useSuspenseInfiniteQuery(queryKeys.movie.searchInfinite({ query, language }));
+export const useSearchMoviesInfinite = (params: GetSearchMoviesParams) => {
+  return useSuspenseInfiniteQuery(
+    movieQueries.searchInfinite({
+      query: params.query,
+      language: params.language || 'en-US',
+    })
+  );
+};
+
+export const useMovieDetail = (movieId: number, language = 'en-US') => {
+  return useSuspenseQuery(movieQueries.detail(movieId, language));
+};
+
+export const useSearchMovies = (params: GetSearchMoviesParams) => {
+  return useQuery(movieQueries.search(params));
 };

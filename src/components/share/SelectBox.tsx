@@ -9,7 +9,7 @@ type Option = {
 
 interface SelectBoxProps
   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'size'> {
-  label: string;
+  label?: string; // 선택적으로 변경
   options: Option[];
   value: string;
   //  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -72,23 +72,23 @@ const SelectBox = forwardRef<HTMLSelectElement, SelectBoxProps>(
 
     return (
       <div className="flex flex-col gap-1">
-        {/* 라벨 - 접근성 개선 및 필수 필드 표시 */}
-        <label
-          htmlFor={id}
-          className="font-semibold text-foreground text-sm flex items-center gap-2"
-        >
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-            {label}
-          </span>
-          {required && (
-            <span className="text-accent ml-1" aria-label="필수 입력">
-              *
+        {label && (
+          <label
+            htmlFor={id}
+            className="font-semibold text-foreground text-sm flex items-center gap-2"
+          >
+            <span className="inline-flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+              {label}
             </span>
-          )}
-        </label>
+            {required && (
+              <span className="text-accent ml-1" aria-label="필수 입력">
+                *
+              </span>
+            )}
+          </label>
+        )}
 
-        {/* 셀렉트 박스 - 개선된 UX 및 접근성 */}
         <select
           ref={ref}
           id={id}

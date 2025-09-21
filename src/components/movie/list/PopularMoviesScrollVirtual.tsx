@@ -1,15 +1,12 @@
 import { VirtuosoGrid } from 'react-virtuoso';
-import Movie from '@/components/movie/Movie';
-import MoviesSkeleton from '../skeleton/MoviesSkeleton';
+import Movie from '@/components/movie/list/Movie';
+import MoviesSkeleton from '../../skeleton/MoviesSkeleton';
 import { usePopularMoviesInfinite } from '@/hooks/useMovies';
+import { useLanguageStore } from '@/stores/useLanguageStore';
 import { MovieType } from '@/types/movie';
 
-interface Props {
-  language?: string;
-  region?: string;
-}
-
-const PopularMoviesScrollVirtual = ({ language = 'en-US' }: Props) => {
+const PopularMoviesScrollVirtual = () => {
+  const { language } = useLanguageStore();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     usePopularMoviesInfinite(language);
 

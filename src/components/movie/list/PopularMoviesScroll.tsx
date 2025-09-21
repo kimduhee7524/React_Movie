@@ -1,7 +1,7 @@
-import Movie from '@/components/movie/Movie';
+import Movie from '@/components/movie/list/Movie';
 import { usePopularMoviesInfinite } from '@/hooks/useMovies';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import MoviesSkeleton from '../skeleton/MoviesSkeleton';
+import MoviesSkeleton from '../../skeleton/MoviesSkeleton';
 import { MovieType } from '@/types/movie';
 
 interface Props {

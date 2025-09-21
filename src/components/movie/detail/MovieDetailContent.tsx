@@ -5,6 +5,7 @@ import MovieDetailPoster from './MovieDetailPoster';
 import MovieDetailOverview from './MovieDetailOverview';
 import MovieDetailCompanies from './MovieDetailCompanies';
 import MovieDetailLinks from './MovieDetailLinks';
+import MovieAIRecommendationsContent from './MovieAIRecommendationsContent';
 
 const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
 
@@ -41,6 +42,10 @@ export default function MovieDetailContent({
             <MovieDetailCompanies movie={movie} />
             <MovieDetailLinks movie={movie} />
           </div>
+        </div>
+
+        <div className="mt-12">
+          <MovieAIRecommendationsContent movie={movie} />
         </div>
       </div>
     </>

@@ -28,8 +28,8 @@ const PopularMoviesScrollVirtual = () => {
       components={{
         Footer: () =>
           isFetchingNextPage ? (
-            <div className="col-span-full">
-              <MoviesSkeleton count={4} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <MoviesSkeleton />
             </div>
           ) : null,
       }}

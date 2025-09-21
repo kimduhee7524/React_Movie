@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 export default function PopularMovies() {
   return (
-    <PageLayout title="인기 영화 (Infinite Scroll)">
+    <PageLayout title="인기 영화">
       <ErrorBoundary
         fallbackRender={({ error, resetErrorBoundary }) => (
           <ErrorFallback

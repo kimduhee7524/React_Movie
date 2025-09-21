@@ -5,6 +5,10 @@ import {
   getMovieDetail,
 } from '@/api/movies';
 import {
+  getAIMovieRecommendations,
+  AIRecommendation,
+} from '@/api/aiRecommendations';
+import {
   GetSearchMoviesParams,
   SearchMovieResponse,
   GetMoviesParams,
@@ -21,6 +25,8 @@ export const movieQueries = {
     details: () => [...movieQueries.keys.all, 'detail'] as const,
     detail: (id: number, language?: string) =>
       [...movieQueries.keys.details(), id, { language }] as const,
+    aiRecommendations: (movieId: number) =>
+      [...movieQueries.keys.all, 'ai-recommendations', movieId] as const,
   },
 
   // 인기 영화 쿼리
@@ -81,5 +87,15 @@ export const movieQueries = {
       queryKey: movieQueries.keys.detail(movieId, language),
       queryFn: () => getMovieDetail(movieId, language),
       staleTime: 1000 * 60 * 10,
+    }),
+
+  // 🤖 AI 영화 추천
+  aiRecommendations: (movie: MovieDetailType) =>
+    queryOptions<AIRecommendation[], Error>({
+      queryKey: movieQueries.keys.aiRecommendations(movie.id),
+      queryFn: () => getAIMovieRecommendations(movie),
+      staleTime: 1000 * 60 * 30,
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     }),
 };

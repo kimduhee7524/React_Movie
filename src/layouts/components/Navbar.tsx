@@ -55,7 +55,6 @@ export default function Navbar() {
             />
           </div>
           <SearchInput />
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-accent to-primary animate-pulse"></div>
         </div>
       </div>
     </header>

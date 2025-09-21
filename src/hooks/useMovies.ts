@@ -3,7 +3,11 @@ import {
   useSuspenseQuery,
   useQuery,
 } from '@tanstack/react-query';
-import { GetSearchMoviesParams, GetMoviesParams } from '@/types/movie';
+import {
+  GetSearchMoviesParams,
+  GetMoviesParams,
+  MovieDetailType,
+} from '@/types/movie';
 import { movieQueries } from '@/queries/movieQueries';
 
 export const useSuspensePopularMovies = (params: GetMoviesParams = {}) => {
@@ -36,4 +40,8 @@ export const useMovieDetail = (movieId: number, language = 'en-US') => {
 
 export const useSearchMovies = (params: GetSearchMoviesParams) => {
   return useQuery(movieQueries.search(params));
+};
+
+export const useSuspenseAIMovieRecommendations = (movie: MovieDetailType) => {
+  return useSuspenseQuery(movieQueries.aiRecommendations(movie));
 };

@@ -1,7 +1,5 @@
 import { MovieDetailType } from '@/types/movie';
-import { Sparkles, RefreshCw } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { movieQueries } from '@/queries/movieQueries';
+import { Sparkles } from 'lucide-react';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/components/share/ErrorFallback';
@@ -15,8 +13,6 @@ interface MovieAIRecommendationsContentProps {
 export default function MovieAIRecommendationsContent({
   movie,
 }: MovieAIRecommendationsContentProps) {
-  const queryClient = useQueryClient();
-
   return (
     <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border/50">
       <div className="flex items-center justify-between mb-6">

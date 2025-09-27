@@ -102,3 +102,11 @@ export interface MovieDetailType {
   status: string;
   tagline: string | null;
 }
+
+// AI 추천 관련 타입
+export interface AIRecommendation {
+  title: string;
+  reason: string;
+  genre: string;
+  rating?: string;
+}

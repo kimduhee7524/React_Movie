@@ -4,16 +4,14 @@ import {
   getSearchMovies,
   getMovieDetail,
 } from '@/api/movies';
-import {
-  getAIMovieRecommendations,
-  AIRecommendation,
-} from '@/api/aiRecommendations';
+import { getAIMovieRecommendations } from '@/api/aiRecommendations';
 import {
   GetSearchMoviesParams,
   SearchMovieResponse,
   GetMoviesParams,
   MovieResponse,
   MovieDetailType,
+  AIRecommendation,
 } from '@/types/movie';
 
 export const movieQueries = {
@@ -89,7 +87,7 @@ export const movieQueries = {
       staleTime: 1000 * 60 * 10,
     }),
 
-  // 🤖 AI 영화 추천
+  // AI 영화 추천
   aiRecommendations: (movie: MovieDetailType) =>
     queryOptions<AIRecommendation[], Error>({
       queryKey: movieQueries.keys.aiRecommendations(movie.id),

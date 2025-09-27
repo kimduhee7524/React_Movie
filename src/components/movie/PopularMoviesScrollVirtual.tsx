@@ -1,5 +1,5 @@
 import { VirtuosoGrid } from 'react-virtuoso';
-import Movie from '@/components/movie/Movie';
+import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '../skeleton/MoviesSkeleton';
 import { usePopularMoviesInfinite } from '@/hooks/useMovies';
 import { MovieType } from '@/types/movie';

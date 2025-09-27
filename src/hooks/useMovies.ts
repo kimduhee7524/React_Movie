@@ -1,42 +1,47 @@
 import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
+  useQuery,
 } from '@tanstack/react-query';
-import { getPopularMovies, getSearchMovies } from '@/services/movieApi';
-import { GetSearchMoviesParams, SearchMovieResponse } from '@/types/movie';
+import {
+  GetSearchMoviesParams,
+  GetMoviesParams,
+  MovieDetailType,
+} from '@/types/movie';
+import { movieQueries } from '@/queries/movieQueries';
 
-export const usePopularMovies = ({ page = 1, language = 'en-US' }) => {
+export const useSuspensePopularMovies = (params: GetMoviesParams = {}) => {
   return useSuspenseQuery({
-    queryKey: ['popularMovies', { page, language }],
-    queryFn: () => getPopularMovies({ page, language }),
+    ...movieQueries.popular(params),
+    select: (data) => data.results,
   });
+};
+
+export const usePopularMovies = (params: GetMoviesParams = {}) => {
+  return useQuery(movieQueries.popular(params));
 };
 
 export const usePopularMoviesInfinite = (language = 'en-US') => {
-  return useSuspenseInfiniteQuery({
-    queryKey: ['popular-movies', language],
-    queryFn: ({ pageParam = 1 }) =>
-      getPopularMovies({ page: pageParam, language }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const next = lastPage.page + 1;
-      return next <= lastPage.total_pages ? next : undefined;
-    },
-  });
+  return useSuspenseInfiniteQuery(movieQueries.popularInfinite(language));
 };
 
-export const useSearchMoviesInfinite = ({
-  query,
-  language = 'en-US',
-}: GetSearchMoviesParams) => {
-  return useSuspenseInfiniteQuery<SearchMovieResponse, Error>({
-    queryKey: ['search-movies', { query, language }],
-    queryFn: ({ pageParam = 1 }) =>
-      getSearchMovies({ query, language, page: pageParam as number }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const next = lastPage.page + 1;
-      return next <= lastPage.total_pages ? next : undefined;
-    },
-  });
+export const useSearchMoviesInfinite = (params: GetSearchMoviesParams) => {
+  return useSuspenseInfiniteQuery(
+    movieQueries.searchInfinite({
+      query: params.query,
+      language: params.language || 'en-US',
+    })
+  );
+};
+
+export const useMovieDetail = (movieId: number, language = 'en-US') => {
+  return useSuspenseQuery(movieQueries.detail(movieId, language));
+};
+
+export const useSearchMovies = (params: GetSearchMoviesParams) => {
+  return useQuery(movieQueries.search(params));
+};
+
+export const useSuspenseAIMovieRecommendations = (movie: MovieDetailType) => {
+  return useSuspenseQuery(movieQueries.aiRecommendations(movie));
 };

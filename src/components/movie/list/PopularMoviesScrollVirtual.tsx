@@ -1,0 +1,40 @@
+import { VirtuosoGrid } from 'react-virtuoso';
+import Movie from '@/components/movie/list/Movie';
+import MoviesSkeleton from '../../skeleton/MoviesSkeleton';
+import { usePopularMoviesInfinite } from '@/hooks/useMovies';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { MovieType } from '@/types/movie';
+
+const PopularMoviesScrollVirtual = () => {
+  const { language } = useLanguageStore();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePopularMoviesInfinite(language);
+
+  const movies = data?.pages.flatMap((page) => page.results) ?? [];
+
+  return (
+    <VirtuosoGrid
+      useWindowScroll
+      data={movies}
+      endReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }}
+      listClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4"
+      itemContent={(index, movie: MovieType) => (
+        <Movie key={movie.id} movie={movie} />
+      )}
+      components={{
+        Footer: () =>
+          isFetchingNextPage ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <MoviesSkeleton />
+            </div>
+          ) : null,
+      }}
+    />
+  );
+};
+
+export default PopularMoviesScrollVirtual;

@@ -1,16 +1,17 @@
-import { apiClient } from "@/services/apiClient";
+import { apiClient } from '@/api/client';
 import {
   MovieResponse,
   GetMoviesParams,
   GetSearchMoviesParams,
   SearchMovieResponse,
-} from "@/types/movie";
+  MovieDetailType,
+} from '@/types/movie';
 
 export const getPopularMovies = async ({
   page = 1,
-  language = "en-US",
+  language = 'en-US',
 }: GetMoviesParams): Promise<MovieResponse> => {
-  const response = await apiClient.get("/movie/popular", {
+  const response = await apiClient.get('/movie/popular', {
     params: { page, language },
   });
   return response.data;
@@ -18,15 +19,25 @@ export const getPopularMovies = async ({
 
 export const getSearchMovies = async ({
   query,
-  language = "en-US",
+  language = 'en-US',
   page = 1,
 }: GetSearchMoviesParams): Promise<SearchMovieResponse> => {
-  const response = await apiClient.get("/search/movie", {
+  const response = await apiClient.get('/search/movie', {
     params: {
       query,
       language,
       page,
     },
+  });
+  return response.data;
+};
+
+export const getMovieDetail = async (
+  movieId: number,
+  language = 'en-US'
+): Promise<MovieDetailType> => {
+  const response = await apiClient.get(`/movie/${movieId}`, {
+    params: { language },
   });
   return response.data;
 };

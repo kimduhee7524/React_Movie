@@ -45,3 +45,7 @@ export const useSearchMovies = (params: GetSearchMoviesParams) => {
 export const useSuspenseAIMovieRecommendations = (movie: MovieDetailType) => {
   return useSuspenseQuery(movieQueries.aiRecommendations(movie));
 };
+
+export const useSuspenseAIMovieReview = (movie: MovieDetailType) => {
+  return useSuspenseQuery(movieQueries.aiReview(movie));
+};

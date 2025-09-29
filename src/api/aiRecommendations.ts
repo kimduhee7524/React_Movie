@@ -3,6 +3,7 @@ import { MovieDetailType, AIRecommendation } from '@/types/movie';
 import {
   buildPrimaryPrompt,
   buildFallbackPrompt,
+  buildMovieReviewPrompt,
 } from '@/utils/promptBuilders';
 import {
   parsePrimaryResponse,
@@ -13,6 +14,7 @@ import {
 export const LIMIT_PRIMARY = 5;
 export const LIMIT_FALLBACK = 3;
 
+// AI 영화 추천
 export const getAIMovieRecommendations = async (
   movie: MovieDetailType
 ): Promise<AIRecommendation[]> => {
@@ -22,6 +24,7 @@ export const getAIMovieRecommendations = async (
     .then((res) => res?.trim())
     .catch(() => null);
 
+  console.log(primaryResult);
   if (primaryResult) {
     const validRecommendations = parsePrimaryResponse(primaryResult);
     if (validRecommendations) {
@@ -42,4 +45,24 @@ export const getAIMovieRecommendations = async (
   const genres = joinNames(movie.genres);
   const fallback = parseFallbackLines(fallbackText, genres);
   return fallback.slice(0, LIMIT_FALLBACK);
+};
+
+// AI 영화 리뷰
+export const getAIMovieReview = async (
+  movie: MovieDetailType
+): Promise<string> => {
+  const reviewPrompt = buildMovieReviewPrompt(movie);
+
+  const reviewResult = await callOpenAI(reviewPrompt)
+    .then((res) => res?.trim())
+    .catch((error) => {
+      console.error('AI 리뷰 생성 실패:', error);
+      return null;
+    });
+
+  if (!reviewResult) {
+    throw new Error('AI 리뷰를 생성할 수 없습니다.');
+  }
+
+  return reviewResult;
 };

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/components/share/ErrorFallback';
-import MovieDetailBackButton from '@/components/movie/detail/MovieDetailBackButton';
+import BackButton from '@/components/share/BackButton';
 import MovieDetailContent from '@/components/movie/detail/MovieDetailContent';
 import MovieDetailSkeleton from '@/components/skeleton/MovieDetailSkeleton';
 
@@ -12,7 +12,7 @@ export default function MovieDetailPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <MovieDetailBackButton />
+      <BackButton to="/" />
 
       <ErrorBoundary
         fallbackRender={({ error, resetErrorBoundary }) => (

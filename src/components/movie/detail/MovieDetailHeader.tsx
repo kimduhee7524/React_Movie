@@ -1,12 +1,22 @@
-import { Star, Calendar, Clock, Globe } from 'lucide-react';
+import { Star, Calendar, Clock, Globe, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { MovieDetailType } from '@/types/movie';
 import { formatRuntime } from '@/utils/formatters';
+import { Button } from '@/components/ui/button';
 
 interface MovieDetailHeaderProps {
   movie: MovieDetailType;
 }
 
 export default function MovieDetailHeader({ movie }: MovieDetailHeaderProps) {
+  const navigate = useNavigate();
+
+  const handleAIReviewClick = () => {
+    navigate(`/movie/${movie.id}/ai-review`, {
+      state: { movie },
+    });
+  };
+
   return (
     <div className="space-y-4">
       <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
@@ -58,6 +68,18 @@ export default function MovieDetailHeader({ movie }: MovieDetailHeaderProps) {
             {genre.name}
           </span>
         ))}
+      </div>
+
+      {/* AI 리뷰 버튼 */}
+      <div className="pt-4">
+        <Button
+          onClick={handleAIReviewClick}
+          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+          size="lg"
+        >
+          <Sparkles className="h-5 w-5" />
+          AI 리뷰 보기
+        </Button>
       </div>
     </div>
   );

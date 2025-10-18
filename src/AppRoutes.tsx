@@ -6,6 +6,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import PopularMovies from '@/pages/PopularMovies';
 import SearchPage from '@/pages/SearchPage';
 import MovieDetailPage from '@/pages/MovieDetailPage';
+import AIReviewPage from '@/pages/AIReviewPage';
 import NotFound from '@/pages/NotFound';
 
 const appRouter = createBrowserRouter([
@@ -16,6 +17,7 @@ const appRouter = createBrowserRouter([
       { path: '/', element: <PopularMovies /> },
       { path: '/search', element: <SearchPage /> },
       { path: '/movie/:id', element: <MovieDetailPage /> },
+      { path: '/movie/:movieId/ai-review', element: <AIReviewPage /> },
     ],
   },
   {

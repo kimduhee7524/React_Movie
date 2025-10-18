@@ -7,10 +7,10 @@ interface BackButtonProps {
   className?: string;
 }
 
-export default function BackButton({
-  to,
-  onClick,
-  className = 'relative z-20 p-6',
+export default function BackButton({ 
+  to, 
+  onClick, 
+  className = "relative z-20 p-6" 
 }: BackButtonProps) {
   const navigate = useNavigate();
 

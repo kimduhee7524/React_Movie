@@ -6,7 +6,7 @@ import {
 } from '@/api/movies';
 import {
   getAIMovieRecommendations,
-  AIRecommendation,
+  getAIMovieReview,
 } from '@/api/aiRecommendations';
 import {
   GetSearchMoviesParams,
@@ -14,6 +14,7 @@ import {
   GetMoviesParams,
   MovieResponse,
   MovieDetailType,
+  AIRecommendation,
 } from '@/types/movie';
 
 export const movieQueries = {
@@ -27,6 +28,8 @@ export const movieQueries = {
       [...movieQueries.keys.details(), id, { language }] as const,
     aiRecommendations: (movieId: number) =>
       [...movieQueries.keys.all, 'ai-recommendations', movieId] as const,
+    aiReview: (movieId: number) =>
+      [...movieQueries.keys.all, 'ai-review', movieId] as const,
   },
 
   // 인기 영화 쿼리
@@ -89,12 +92,22 @@ export const movieQueries = {
       staleTime: 1000 * 60 * 10,
     }),
 
-  // 🤖 AI 영화 추천
+  // AI 영화 추천
   aiRecommendations: (movie: MovieDetailType) =>
     queryOptions<AIRecommendation[], Error>({
       queryKey: movieQueries.keys.aiRecommendations(movie.id),
       queryFn: () => getAIMovieRecommendations(movie),
-      staleTime: 1000 * 60 * 30,
+      staleTime: 0,
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    }),
+
+  // AI 영화 리뷰
+  aiReview: (movie: MovieDetailType) =>
+    queryOptions<string, Error>({
+      queryKey: movieQueries.keys.aiReview(movie.id),
+      queryFn: () => getAIMovieReview(movie),
+      staleTime: 1000 * 60 * 10,
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     }),

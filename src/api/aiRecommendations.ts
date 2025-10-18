@@ -1,4 +1,4 @@
-import { callOpenAI } from './openai';
+import { callOpenAI } from './openaiClient';
 import { MovieDetailType, AIRecommendation } from '@/types/movie';
 import {
   buildPrimaryPrompt,
@@ -14,55 +14,35 @@ import {
 export const LIMIT_PRIMARY = 5;
 export const LIMIT_FALLBACK = 3;
 
-// AI 영화 추천
 export const getAIMovieRecommendations = async (
   movie: MovieDetailType
 ): Promise<AIRecommendation[]> => {
   const primaryPrompt = buildPrimaryPrompt(movie);
+  const primaryResult = await callOpenAI(primaryPrompt);
 
-  const primaryResult = await callOpenAI(primaryPrompt)
-    .then((res) => res?.trim())
-    .catch(() => null);
-
-  console.log(primaryResult);
-  if (primaryResult) {
-    const validRecommendations = parsePrimaryResponse(primaryResult);
-    if (validRecommendations) {
-      console.log(primaryResult);
+  if (primaryResult?.trim()) {
+    const validRecommendations = parsePrimaryResponse(primaryResult.trim());
+    if (validRecommendations && validRecommendations.length > 0) {
       return validRecommendations.slice(0, LIMIT_PRIMARY);
     }
   }
 
+  // 응답이 없거나 파싱 실패시 Fallback 시도
   const fallbackPrompt = buildFallbackPrompt(movie);
-  const fallbackText = await callOpenAI(fallbackPrompt)
-    .then((res) => res?.trim())
-    .catch(() => null);
+  const fallbackText = await callOpenAI(fallbackPrompt);
 
-  if (!fallbackText) {
-    throw new Error('AI 추천을 생성할 수 없습니다.');
-  }
-
+  // Fallback 응답 처리
   const genres = joinNames(movie.genres);
-  const fallback = parseFallbackLines(fallbackText, genres);
+  const fallback = parseFallbackLines(fallbackText?.trim() || '', genres);
+
   return fallback.slice(0, LIMIT_FALLBACK);
 };
 
-// AI 영화 리뷰
 export const getAIMovieReview = async (
   movie: MovieDetailType
 ): Promise<string> => {
   const reviewPrompt = buildMovieReviewPrompt(movie);
+  const reviewResult = await callOpenAI(reviewPrompt);
 
-  const reviewResult = await callOpenAI(reviewPrompt)
-    .then((res) => res?.trim())
-    .catch((error) => {
-      console.error('AI 리뷰 생성 실패:', error);
-      return null;
-    });
-
-  if (!reviewResult) {
-    throw new Error('AI 리뷰를 생성할 수 없습니다.');
-  }
-
-  return reviewResult;
+  return reviewResult?.trim() || '';
 };

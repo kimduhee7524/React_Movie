@@ -1,7 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import ErrorFallback from '@/components/share/ErrorFallback';
 import BackButton from '@/components/share/BackButton';
 import AIHeader from '@/components/share/AIHeader';
 import AIReviewContent from '@/components/movie/detail/AIReviewContent';
@@ -31,29 +29,18 @@ export default function AIReviewPage() {
             className="flex items-center gap-3 mb-6"
           />
 
-          <ErrorBoundary
-            fallbackRender={({ error, resetErrorBoundary }) => (
-              <div className="min-h-screen flex items-center justify-center">
-                <ErrorFallback
-                  error={error}
-                  resetErrorBoundary={resetErrorBoundary}
-                />
-              </div>
-            )}
-          >
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <div className="flex items-center gap-3 text-lg">
-                    <div className="w-6 h-6 bg-purple-400 rounded-full animate-spin" />
-                    <span>AI가 리뷰를 작성하고 있습니다...</span>
-                  </div>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-12">
+                <div className="flex items-center gap-3 text-lg">
+                  <div className="w-6 h-6 bg-purple-400 rounded-full animate-spin" />
+                  <span>AI가 리뷰를 작성하고 있습니다...</span>
                 </div>
-              }
-            >
-              <AIReviewContent movieId={movieIdNumber} />
-            </Suspense>
-          </ErrorBoundary>
+              </div>
+            }
+          >
+            <AIReviewContent movieId={movieIdNumber} />
+          </Suspense>
         </div>
       </div>
     </div>

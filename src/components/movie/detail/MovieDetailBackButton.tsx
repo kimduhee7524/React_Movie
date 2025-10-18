@@ -14,11 +14,9 @@ export default function BackButton({
 }: BackButtonProps) {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleBack = () => {
     if (onClick) {
       onClick();
-    } else if (to) {
-      navigate(to);
     } else {
       navigate(-1); // 기본값: 이전 페이지로
     }
@@ -42,7 +40,7 @@ export default function BackButton({
         </Link>
       ) : (
         <button
-          onClick={handleClick}
+          onClick={handleBack}
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
         >
           {buttonContent}

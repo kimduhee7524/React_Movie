@@ -51,7 +51,7 @@ export const movieQueries = {
         { language },
       ],
       queryFn: ({ pageParam = 1 }) =>
-        getPopularMovies({ page: pageParam, language }),
+        getPopularMovies({ page: pageParam as number, language }),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         const next = lastPage.page + 1;

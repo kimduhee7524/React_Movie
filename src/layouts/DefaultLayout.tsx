@@ -1,4 +1,6 @@
 import { Outlet } from 'react-router-dom';
+import { ErrorBoundary } from '@/errors';
+import ErrorFallback from '@/components/share/ErrorFallback';
 import Navbar from './components/Navbar';
 
 export default function DefaultLayout() {
@@ -6,7 +8,16 @@ export default function DefaultLayout() {
     <div className="min-h-screen bg-background text-foreground overflow-y-auto relative">
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-6 relative z-10">
-        <Outlet />
+        <ErrorBoundary
+          fallback={(error, reset) => (
+            <div className="min-h-[60vh] flex items-center justify-center">
+              <ErrorFallback error={error} resetErrorBoundary={reset} />
+            </div>
+          )}
+          onReset={() => window.location.reload()}
+        >
+          <Outlet />
+        </ErrorBoundary>
       </main>
 
       <div className="fixed inset-0 pointer-events-none z-0">

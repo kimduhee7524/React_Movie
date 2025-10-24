@@ -1,12 +1,10 @@
 import { AIRecommendation } from '@/types/movie';
 
-/** ====== 응답 파싱 유틸리티 함수들 ====== */
-
-/** 안전한 문자열 조립 */
+// 안전한 문자열 조립
 export const joinNames = (arr: { name: string }[] = [], max?: number): string =>
   (max ? arr.slice(0, max) : arr).map((x) => x.name).join(', ');
 
-/** 응답에서 JSON 덩어리만 추출 */
+// 응답에서 JSON 덩어리만 추출
 const extractJsonArray = (text: string): string | null => {
   const start = text.indexOf('[');
   const end = text.lastIndexOf(']');
@@ -14,7 +12,7 @@ const extractJsonArray = (text: string): string | null => {
   return text.slice(start, end + 1).trim();
 };
 
-/** 안전한 JSON 파싱 */
+// 안전한 JSON 파싱
 const safeJsonParse = <T>(jsonString: string): T | null => {
   try {
     return JSON.parse(jsonString) as T;
@@ -23,7 +21,7 @@ const safeJsonParse = <T>(jsonString: string): T | null => {
   }
 };
 
-/** 추천 결과 유효성 검증 */
+// 추천 결과 유효성 검증
 const validateRecommendations = (data: unknown): AIRecommendation[] => {
   if (!Array.isArray(data)) {
     throw new Error('추천 결과가 배열이 아닙니다.');
@@ -48,9 +46,7 @@ const validateRecommendations = (data: unknown): AIRecommendation[] => {
   return validRecommendations;
 };
 
-/** ====== 응답 파싱 함수들 ====== */
-
-/** 메인 JSON 응답 파싱 */
+// 메인 JSON 응답 파싱
 export const parsePrimaryResponse = (
   response: string
 ): AIRecommendation[] | null => {
@@ -69,7 +65,7 @@ export const parsePrimaryResponse = (
   }
 };
 
-/** 폴백 문자열 파싱 -> 구조화 */
+// 폴백 문자열 파싱 -> 구조화
 export const parseFallbackLines = (
   text: string,
   primaryGenre: string

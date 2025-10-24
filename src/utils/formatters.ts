@@ -1,4 +1,4 @@
-// 분(minutes) 단위를 시간과 분으로 포맷팅
+// 분 단위를 시간과 분으로 포맷팅
 export const formatRuntime = (minutes: number | null): string => {
   if (!minutes) return 'N/A';
   const hours = Math.floor(minutes / 60);
@@ -16,7 +16,6 @@ export const formatCurrency = (amount: number): string => {
 };
 
 // 날짜를 지역화된 형식으로 포맷팅
-
 export const formatDate = (date: string): string => {
   if (!date) return '';
   return new Date(date).toLocaleDateString('ko-KR', {
@@ -27,7 +26,6 @@ export const formatDate = (date: string): string => {
 };
 
 // 숫자를 천 단위 구분자가 있는 형식으로 포맷팅
-
 export const formatNumber = (number: number): string => {
   return number.toLocaleString();
 };

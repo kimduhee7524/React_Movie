@@ -21,7 +21,11 @@ import {
   type OpenAIErrorResponse,
 } from './external/openai';
 
-// 원시 에러를 커스텀 에러로 변환하는 중앙 처리 함수
+/**
+ * 원시 에러를 커스텀 에러로 변환하는 중앙 처리 함수
+ * - 리포팅은 하지 않음 (순수 변환만)
+ * - handleError() 내부에서 사용되거나 직접 변환만 필요할 때 사용
+ */
 export const normalizeError = (error: unknown): BaseError => {
   // 이미 커스텀 에러인 경우 그대로 반환
   if (error instanceof BaseError) {
@@ -60,10 +64,18 @@ function normalizeAxiosError(axiosError: AxiosError): BaseError {
   }
 
   // 외부 API 에러 감지
+  const baseURL = axiosError.config?.baseURL || '';
+  const fullURL = baseURL + endpoint;
+
   const isTMDBEndpoint =
-    endpoint.includes('themoviedb.org') || endpoint.includes('tmdb');
+    fullURL.includes('themoviedb.org') ||
+    baseURL.includes('themoviedb.org') ||
+    endpoint.includes('tmdb');
+
   const isOpenAIEndpoint =
-    endpoint.includes('openai.com') || endpoint.includes('api.openai');
+    fullURL.includes('openai.com') ||
+    baseURL.includes('openai.com') ||
+    endpoint.includes('api.openai');
 
   // TMDB API 에러
   if (isTMDBEndpoint && isTMDBError(responseData)) {

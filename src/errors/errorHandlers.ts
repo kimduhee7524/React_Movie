@@ -1,14 +1,15 @@
 import { BaseError } from './types/BaseError';
-import { ClientError } from './classes/ClientError';
 import { normalizeError } from './errorNormalize';
 import { reportError } from './reporting/errorReport';
 
-// 전역 에러 핸들러
+/**
+ * 전역 에러 핸들러 (정규화 + 리포팅)
+ * - 애플리케이션 최상위 레벨에서 사용
+ * - 정규화와 리포팅을 한 번에 처리
+ */
 export const handleError = (error: unknown): BaseError => {
   const normalizedError = normalizeError(error);
-
   reportError(normalizedError);
-
   return normalizedError;
 };
 
@@ -17,12 +18,23 @@ export const handleReactError = (
   error: Error,
   errorInfo: { componentStack?: string }
 ): BaseError => {
-  const customError = new ClientError(error.message, {
-    originalError: error,
-    componentStack: errorInfo.componentStack,
-  });
+  // 먼저 원본 에러를 정규화하여 적절한 타입으로 분류
+  const normalizedError = normalizeError(error);
 
-  return handleError(customError);
+  // 항상 정규화된 에러에 React 관련 정보만 추가
+  normalizedError.metadata.componentStack = errorInfo.componentStack;
+
+  // Sentry 컨텍스트에 ErrorBoundary 태그 추가
+  if (normalizedError.sentryContext) {
+    normalizedError.sentryContext.tags = {
+      ...normalizedError.sentryContext.tags,
+      errorBoundary: 'true',
+    };
+  }
+
+  // 한 번만 리포팅
+  reportError(normalizedError);
+  return normalizedError;
 };
 
 // 전역 에러 핸들러 설정

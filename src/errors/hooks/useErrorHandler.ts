@@ -14,7 +14,7 @@ import { handleError as coreHandleError } from '../errorHandlers';
  *
  * @example
  * ```typescript
- * // 🔥 Mutation - 간단 사용
+ * // Mutation - 간단 사용
  * function LikeButton({ movieId }) {
  *   const { handleError } = useErrorHandler();
  *
@@ -26,7 +26,7 @@ import { handleError as coreHandleError } from '../errorHandlers';
  *   return <button onClick={() => mutation.mutate()}>좋아요</button>;
  * }
  *
- * // 🔥 Query - Toast 처리
+ * // Query - Toast 처리
  * function OptionalWidget() {
  *   const { handleError } = useErrorHandler();
  *
@@ -38,12 +38,12 @@ import { handleError as coreHandleError } from '../errorHandlers';
  *
  *   useEffect(() => {
  *     if (error) {
- *       handleError(error); // 🎯 바로 사용!
+ *       handleError(error); // 바로 사용!
  *     }
  *   }, [error, handleError]);
  * }
  *
- * // 🔥 커스텀 메시지
+ * // 커스텀 메시지
  * function CustomAction() {
  *   const { handleErrorWithMessage } = useErrorHandler();
  *
@@ -61,10 +61,10 @@ export function useErrorHandler() {
    * - useMutation의 onError에 바로 사용 가능
    */
   const handleError = useCallback((error: unknown): void => {
-    // 🔥 일관된 에러 처리 (로깅 + Sentry)
+    // 일관된 에러 처리 (로깅 + Sentry)
     const normalizedError = coreHandleError(error);
 
-    // 🔥 Toast 표시
+    // Toast 표시
     toast.error(normalizedError.getUserMessage());
   }, []);
 
@@ -73,10 +73,10 @@ export function useErrorHandler() {
    */
   const handleErrorWithMessage = useCallback(
     (error: unknown, customMessage: string): void => {
-      // 🔥 일관된 에러 처리 (로깅 + Sentry)
+      // 일관된 에러 처리 (로깅 + Sentry)
       coreHandleError(error);
 
-      // 🔥 커스텀 메시지로 Toast 표시
+      // 커스텀 메시지로 Toast 표시
       toast.error(customMessage);
     },
     []
@@ -87,10 +87,10 @@ export function useErrorHandler() {
    */
   const handleErrorAndReturn = useCallback(
     (error: unknown, customMessage?: string): BaseError => {
-      // 🔥 일관된 에러 처리 (로깅 + Sentry)
+      // 일관된 에러 처리 (로깅 + Sentry)
       const normalizedError = coreHandleError(error);
 
-      // 🔥 Toast 표시
+      // Toast 표시
       const message = customMessage || normalizedError.getUserMessage();
       toast.error(message);
 

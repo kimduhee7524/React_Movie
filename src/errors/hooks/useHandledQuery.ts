@@ -17,7 +17,7 @@ import { useErrorHandler } from './useErrorHandler';
  *
  * @example
  * ```typescript
- * // ✅ 기존 방식 (복잡)
+ * // 기존 방식 (복잡)
  * function OptionalWidget() {
  *   const { handleError } = useErrorHandler();
  *
@@ -35,7 +35,7 @@ import { useErrorHandler } from './useErrorHandler';
  *   return <div>{data}</div>;
  * }
  *
- * // 🔥 새로운 방식 (간단)
+ * // 새로운 방식 (간단)
  * function OptionalWidget() {
  *   const { data, isError } = useHandledQuery({
  *     queryKey: ['optional-data'],
@@ -46,7 +46,7 @@ import { useErrorHandler } from './useErrorHandler';
  *   return <div>{data}</div>;
  * }
  *
- * // 🔥 커스텀 메시지
+ * // 커스텀 메시지
  * function CustomWidget() {
  *   const { data, isError } = useHandledQuery({
  *     queryKey: ['custom-data'],
@@ -85,7 +85,7 @@ export function useHandledQuery<
   // useQuery with throwOnError: false
   const queryResult = useQuery<TQueryFnData, TError, TData, TQueryKey>({
     ...options,
-    throwOnError: false, // 🔥 Toast로 처리
+    throwOnError: false, // Toast로 처리
   });
 
   // 에러 자동 처리

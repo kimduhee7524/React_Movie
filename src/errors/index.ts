@@ -37,4 +37,4 @@ export {
   type ErrorContent,
 } from './errorUI';
 
-export { classifyError, classifyCoreError } from './errorClassify';
+export { classifyError } from './errorClassify';

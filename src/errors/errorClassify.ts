@@ -57,7 +57,7 @@ const CORE_ERROR_CODE_TO_KIND_MAP: Partial<Record<number, ErrorKind>> = {
   [ErrorCodes.LAZY_LOAD_ERROR]: 'ClientError',
 } as const;
 
-// 에러를 ErrorKind로 분류
+// 에러를 ErrorKind로 분류 (Sentry 태그용)
 export function classifyCoreError(error: Error | BaseError): ErrorKind {
   // 1. BaseError가 아니면 UnknownError
   if (!(error instanceof BaseError)) {
@@ -85,7 +85,4 @@ export function classifyCoreError(error: Error | BaseError): ErrorKind {
   return 'UnknownError';
 }
 
-// 에러 코드 기반으로만 분류
-export function classifyError(error: Error | BaseError): ErrorKind {
-  return classifyCoreError(error);
-}
+export const classifyError = classifyCoreError;

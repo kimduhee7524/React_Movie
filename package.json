@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "pnpm@10.19.0",
   "engines": {
-    "node": ">=20.9.0",
-    "pnpm": ">=9.12.1"
+    "node": "20.18.0",
+    "pnpm": "10.19.0"
   },
   "scripts": {
     "dev": "next dev",
@@ -33,7 +34,6 @@
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.6.0",
     "react-virtuoso": "^4.12.7",
     "require-in-the-middle": "7.5.2",
     "sonner": "^2.0.5",
@@ -60,3 +60,4 @@
     "typescript-eslint": "^8.30.1"
   }
 }
+

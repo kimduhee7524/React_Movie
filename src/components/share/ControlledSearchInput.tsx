@@ -1,11 +1,13 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export default function ControlledSearchInput() {
   const [keyword, setKeyword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // 입력값 검증 함수
   // form을 다룰 떄 모든 인풋은 validation을 고려해야합니다.
@@ -73,7 +75,7 @@ export default function ControlledSearchInput() {
         `/search?query=${encodedKeyword}`
       );
 
-      navigate(`/search?query=${encodedKeyword}`);
+      router.push(`/search?query=${encodedKeyword}`);
       setKeyword(''); // 검색 성공 후 입력창 비우기
     } catch (navigationError) {
       // 네비게이션 에러 처리

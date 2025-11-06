@@ -1,40 +1,41 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+// 🔒 프록시 API를 사용하여 보안 강화 (API 키 서버에서만 사용)
+export const OPENAI_BASE_URL = '/api/openai';
 const TIMEOUT = 60000;
 
 export const openaiClient = axios.create({
-  baseURL: 'https://api.openai.com/v1',
+  baseURL: OPENAI_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    ...(OPENAI_API_KEY && { Authorization: `Bearer ${OPENAI_API_KEY}` }),
   },
   timeout: TIMEOUT,
 });
 
-interface OpenAIResponse {
-  choices: Array<{
-    message: {
-      content: string;
-    };
-  }>;
+interface OpenAIProxyResponse {
+  content: string;
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
 }
 
-export const callOpenAI = async (prompt: string): Promise<string> => {
-  const response: AxiosResponse<OpenAIResponse> = await openaiClient.post(
-    '/chat/completions',
-    {
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      max_tokens: 1000,
-      temperature: 0.7,
-    }
-  );
+interface OpenAIOptions {
+  model?: string;
+  max_tokens?: number;
+  temperature?: number;
+}
 
-  return response.data?.choices?.[0]?.message?.content || '';
+export const callOpenAI = async (
+  prompt: string,
+  options?: OpenAIOptions
+): Promise<string> => {
+  const response = await openaiClient.post<OpenAIProxyResponse>('/', {
+    prompt,
+    options,
+  });
+
+  return response.data.content || '';
 };
+

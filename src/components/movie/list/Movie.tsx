@@ -1,25 +1,34 @@
+'use client';
+
 import fallbackPoster from '@/assets/tempMovie.png';
-import { MovieType } from '@/types/movie';
+import { MovieType, SearchedMovieType } from '@/types/movie';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+import Image from 'next/image';
 
-const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
+const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL;
 
-export default function Movie({ movie }: { movie: MovieType }) {
+export default function Movie({
+  movie,
+}: {
+  movie: MovieType | SearchedMovieType;
+}) {
   const initialSrc = movie.poster_path
     ? `${IMG_BASE_URL}${movie.poster_path}`
     : fallbackPoster;
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
   return (
-    <Link to={`/movie/${movie.id}`} className="block">
-      <div className="group w-[200px] bg-card/80 backdrop-blur-sm rounded-3xl overflow-hidden m-3 hip-hover neon-border hover:glow-purple transition-all duration-500 cursor-pointer">
-        <div className="relative overflow-hidden">
-          <img
+    <Link href={`/movie/${movie.id}`} className="block">
+      <div className="group w-full bg-card/80 backdrop-blur-sm rounded-3xl overflow-hidden hip-hover neon-border hover:glow-purple transition-all duration-500 cursor-pointer">
+        <div className="relative overflow-hidden aspect-[2/3]">
+          <Image
             src={imgSrc}
             alt={movie.title || 'Movie poster'}
             onError={() => setImgSrc(fallbackPoster)}
-            className="w-[200px] h-[280px] object-cover group-hover:scale-110 transition-transform duration-500"
+            className="object-cover group-hover:scale-110 transition-transform duration-500"
+            fill
+            sizes="25vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm text-accent-foreground px-2 py-1 rounded-full text-xs font-medium">

@@ -1,20 +1,21 @@
+'use client';
+
 import PageLayout from '@/layouts/PageLayout';
+import PopularMoviesScrollVirtual from '@/components/movie/list/PopularMoviesScrollVirtual';
 import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
 import { Suspense } from 'react';
-import SearchMovie from '@/components/movie/SearchMovie';
 
-export default function SearchPage() {
+export default function HomePage() {
   return (
-    <PageLayout title="검색 결과">
-      {/* ✅ ErrorBoundary는 DefaultLayout에서 처리 */}
+    <PageLayout title="인기 영화">
       <Suspense
         fallback={
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
-            <MoviesSkeleton count={8} />
+            <MoviesSkeleton count={12} />
           </div>
         }
       >
-        <SearchMovie />
+        <PopularMoviesScrollVirtual />
       </Suspense>
     </PageLayout>
   );

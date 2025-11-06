@@ -1,20 +1,22 @@
-import { useParams } from 'react-router-dom';
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, use } from 'react';
+import { useRouter } from 'next/navigation';
 import BackButton from '@/components/share/BackButton';
 import AIHeader from '@/components/share/AIHeader';
 import AIReviewContent from '@/components/movie/detail/AIReviewContent';
-import { useNavigate } from 'react-router-dom';
 
-export default function AIReviewPage() {
-  const { movieId } = useParams<{ movieId: string }>();
-  const navigate = useNavigate();
+interface AIReviewPageProps {
+  params: Promise<{ id: string }>;
+}
 
-  const movieIdNumber = movieId ? parseInt(movieId, 10) : 0;
+export default function AIReviewPage({ params }: AIReviewPageProps) {
+  const { id } = use(params);
+  const router = useRouter();
+  const movieIdNumber = id ? parseInt(id, 10) : 0;
 
   const handleGoBack = () => {
-    navigate(`/movie/${movieId}`, {
-      replace: true,
-    });
+    router.push(`/movie/${id}`);
   };
 
   return (

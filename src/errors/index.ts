@@ -29,7 +29,12 @@ export {
   handleReactError,
 } from './errorHandlers';
 
-export { initializeSentry } from './reporting/sentry';
+export {
+  reportToSentry,
+  addBreadcrumb,
+  setUserContext,
+  setTag,
+} from './reporting/sentry';
 
 export {
   getErrorContent,
@@ -38,3 +43,10 @@ export {
 } from './errorUI';
 
 export { classifyError } from './errorClassify';
+
+// Server-side error handling
+export {
+  handleServerError,
+  createErrorResponse,
+  handleServerActionError,
+} from './server/serverErrorHandler';

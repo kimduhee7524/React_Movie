@@ -1,6 +1,6 @@
 import { MovieDetailType } from '@/types/movie';
 
-const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
+const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL;
 
 interface MovieDetailPosterProps {
   movie: MovieDetailType;

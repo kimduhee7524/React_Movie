@@ -1,11 +1,16 @@
-import { useParams } from 'react-router-dom';
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, use } from 'react';
 import BackButton from '@/components/share/BackButton';
 import MovieDetailContent from '@/components/movie/detail/MovieDetailContent';
 import MovieDetailSkeleton from '@/components/skeleton/MovieDetailSkeleton';
 
-export default function MovieDetailPage() {
-  const { id } = useParams<{ id: string }>();
+interface MovieDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function MovieDetailPage({ params }: MovieDetailPageProps) {
+  const { id } = use(params);
   const movieId = parseInt(id || '0');
 
   return (

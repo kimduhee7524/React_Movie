@@ -1,3 +1,5 @@
+'use client';
+
 import { Component, ReactNode } from 'react';
 import { BaseError } from '../types/BaseError';
 import { normalizeError } from '../errorNormalize';

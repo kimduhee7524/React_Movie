@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export default function UnControlledSearchInput() {
   const [error, setError] = useState('');
@@ -11,7 +13,7 @@ export default function UnControlledSearchInput() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // 컴포넌트 언마운트 시 debounce 타이머 정리
   useEffect(() => {
@@ -122,7 +124,7 @@ export default function UnControlledSearchInput() {
         `/search?query=${encodedKeyword}`
       );
 
-      navigate(`/search?query=${encodedKeyword}`);
+      router.push(`/search?query=${encodedKeyword}`);
 
       // 검색 성공 후 입력창 비우기 (uncontrolled)
       if (inputRef.current) {

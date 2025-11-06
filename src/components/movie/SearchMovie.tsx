@@ -1,14 +1,16 @@
+'use client';
+
 import { VirtuosoGrid } from 'react-virtuoso';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { useSearchMoviesInfinite } from '@/hooks/useMovies';
 import { useLanguageStore } from '@/stores/useLanguageStore';
 import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
-import { MovieType } from '@/types/movie';
+import { SearchedMovieType } from '@/types/movie';
 
 export default function SearchMovie() {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query')?.trim() || '';
+  const searchParams = useSearchParams();
+  const query = searchParams?.get('query')?.trim() || '';
   const { language } = useLanguageStore();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -17,7 +19,7 @@ export default function SearchMovie() {
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
 
   return (
-    <VirtuosoGrid
+    <VirtuosoGrid<SearchedMovieType>
       useWindowScroll
       data={movies}
       endReached={() => {
@@ -26,14 +28,14 @@ export default function SearchMovie() {
         }
       }}
       listClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4"
-      itemContent={(index, movie: MovieType) => (
+      itemContent={(index, movie: SearchedMovieType) => (
         <Movie key={movie.id} movie={movie} />
       )}
       components={{
         Footer: () =>
           isFetchingNextPage ? (
-            <div className="col-span-full">
-              <MoviesSkeleton count={4} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+              <MoviesSkeleton count={8} />
             </div>
           ) : null,
       }}

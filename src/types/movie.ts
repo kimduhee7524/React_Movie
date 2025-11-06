@@ -1,4 +1,4 @@
-import { Nullable } from './utils';
+// import { Nullable } from './utils'; // 더 이상 사용하지 않음
 
 interface BaseMovieType {
   id: number;
@@ -15,13 +15,13 @@ interface BaseMovieType {
   video: boolean;
 }
 interface PathType {
-  poster_path: string;
-  backdrop_path: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
 }
 
 export interface MovieType extends BaseMovieType, PathType {}
 
-export interface SearchedMovieType extends BaseMovieType, Nullable<PathType> {}
+export interface SearchedMovieType extends BaseMovieType, PathType {}
 
 export interface PaginatedResponse<T> {
   page: number;

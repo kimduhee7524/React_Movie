@@ -1,4 +1,4 @@
-import { tmdbClient } from '@/api/tmdbClient';
+import { callTmdbApi } from '@/api/tmdbClient';
 import {
   MovieResponse,
   GetMoviesParams,
@@ -11,11 +11,10 @@ export const getPopularMovies = async ({
   page = 1,
   language = 'en-US',
 }: GetMoviesParams): Promise<MovieResponse> => {
-  const response = await tmdbClient.get('/movie/popular', {
-    params: { page, language },
+  return await callTmdbApi('/movie/popular', {
+    page: page.toString(),
+    language,
   });
-
-  return response.data;
 };
 
 export const getSearchMovies = async ({
@@ -23,24 +22,18 @@ export const getSearchMovies = async ({
   language = 'en-US',
   page = 1,
 }: GetSearchMoviesParams): Promise<SearchMovieResponse> => {
-  const response = await tmdbClient.get('/search/movie', {
-    params: {
-      query,
-      language,
-      page,
-    },
+  return await callTmdbApi('/search/movie', {
+    query,
+    language,
+    page: page.toString(),
   });
-
-  return response.data;
 };
 
 export const getMovieDetail = async (
   movieId: number,
   language = 'en-US'
 ): Promise<MovieDetailType> => {
-  const response = await tmdbClient.get(`/movie/${movieId}`, {
-    params: { language },
+  return await callTmdbApi(`/movie/${movieId}`, {
+    language,
   });
-
-  return response.data;
 };

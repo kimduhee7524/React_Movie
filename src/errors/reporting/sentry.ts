@@ -1,49 +1,35 @@
-import * as Sentry from '@sentry/react';
+/**
+ * 간소화된 Sentry 인터페이스
+ * @sentry/nextjs 표준 설정을 활용하는 단순한 래퍼
+ */
+
+import * as Sentry from '@sentry/nextjs';
 import { BaseError } from '../types/BaseError';
 import { classifyError } from '../errorClassify';
 
-let isSentryInitialized = false;
-
-export const initializeSentry = (
-  dsn: string,
-  options?: Sentry.BrowserOptions
+/**
+ * 통합 에러 리포팅
+ * 환경에 관계없이 동일한 인터페이스로 Sentry에 에러 리포팅
+ */
+export const reportToSentry = (
+  error: BaseError | Error,
+  context?: {
+    tags?: Record<string, string>;
+    user?: Sentry.User;
+    extra?: Record<string, unknown>;
+  }
 ) => {
   try {
-    Sentry.init({
-      dsn,
-      environment: process.env.NODE_ENV || 'development',
-      tracesSampleRate: 1.0,
-      beforeSend(event) {
-        // 콘솔 출력은 console.ts에서 이미 처리하므로 여기서는 생략
-        return event;
-      },
-      ...options,
-    });
-
-    isSentryInitialized = true;
-    console.log('[Sentry] Successfully initialized');
-  } catch (error) {
-    console.error('[Sentry] Failed to initialize:', error);
-  }
-};
-
-export const reportToSentry = (error: BaseError | Error) => {
-  if (!isSentryInitialized) {
-    console.warn('[Sentry] Not initialized, skipping error report');
-    return;
-  }
-
-  try {
-    if (error instanceof BaseError) {
-      // BaseError의 getSentryContext() 활용
-      const sentryContext = error.getSentryContext();
-
-      Sentry.withScope((scope) => {
-        // 에러 분류 추가
+    Sentry.withScope((scope) => {
+      // 에러 분류 태그 추가
+      if (error instanceof BaseError) {
         const errorKind = classifyError(error);
         scope.setTag('errorKind', errorKind);
+        scope.setTag('errorCode', error.code);
 
-        // BaseError에서 제공하는 컨텍스트 적용
+        // BaseError의 Sentry 컨텍스트 적용
+        const sentryContext = error.getSentryContext();
+
         if (sentryContext.level) {
           scope.setLevel(sentryContext.level);
         }
@@ -55,43 +41,71 @@ export const reportToSentry = (error: BaseError | Error) => {
         }
 
         if (sentryContext.extra) {
-          scope.setContext('errorDetails', sentryContext.extra);
+          scope.setContext('baseErrorDetails', sentryContext.extra);
         }
 
         if (sentryContext.user) {
           scope.setUser(sentryContext.user);
         }
-
-        Sentry.captureException(error);
-      });
-    } else {
-      // 일반 Error의 경우 분류만 추가
-      const errorKind = classifyError(error);
-      Sentry.withScope((scope) => {
+      } else {
+        // 일반 Error 처리
+        const errorKind = classifyError(error);
         scope.setTag('errorKind', errorKind);
         scope.setLevel('error');
-        Sentry.captureException(error);
-      });
-    }
+      }
+
+      // 추가 컨텍스트 적용
+      if (context?.tags) {
+        Object.entries(context.tags).forEach(([key, value]) => {
+          scope.setTag(key, value);
+        });
+      }
+
+      if (context?.user) {
+        scope.setUser(context.user);
+      }
+
+      if (context?.extra) {
+        scope.setContext('additionalContext', context.extra);
+      }
+
+      // 에러 캡처
+      Sentry.captureException(error);
+    });
   } catch (sentryError) {
     console.error('[Sentry] Failed to report error:', sentryError);
   }
 };
 
+/**
+ * 브레드크럼 추가
+ */
 export const addBreadcrumb = (breadcrumb: Sentry.Breadcrumb) => {
-  if (isSentryInitialized) {
+  try {
     Sentry.addBreadcrumb(breadcrumb);
+  } catch (error) {
+    console.error('[Sentry] Failed to add breadcrumb:', error);
   }
 };
 
+/**
+ * 사용자 컨텍스트 설정
+ */
 export const setUserContext = (user: Sentry.User) => {
-  if (isSentryInitialized) {
+  try {
     Sentry.setUser(user);
+  } catch (error) {
+    console.error('[Sentry] Failed to set user context:', error);
   }
 };
 
+/**
+ * 태그 설정
+ */
 export const setTag = (key: string, value: string) => {
-  if (isSentryInitialized) {
+  try {
     Sentry.setTag(key, value);
+  } catch (error) {
+    console.error('[Sentry] Failed to set tag:', error);
   }
 };

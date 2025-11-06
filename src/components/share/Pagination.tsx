@@ -1,4 +1,6 @@
-import { getPageNumbers } from "@/utils/table";
+'use client';
+
+import { getPageNumbers } from '@/utils/table';
 
 interface PaginationProps {
   currentPage: number;
@@ -26,12 +28,12 @@ export default function Pagination({
       {pages.map((page, index) => (
         <button
           key={index}
-          onClick={() => typeof page === "number" && onPageChange(page)}
+          onClick={() => typeof page === 'number' && onPageChange(page)}
           className={`min-w-[2.5rem] h-10 rounded flex items-center justify-center 
           px-2 text-sm
-          ${currentPage === page ? "bg-black text-white" : "border hover:bg-gray-100"} 
-          ${page === "..." ? "cursor-default" : ""}`}
-          disabled={page === "..."}
+          ${currentPage === page ? 'bg-black text-white' : 'border hover:bg-gray-100'} 
+          ${page === '...' ? 'cursor-default' : ''}`}
+          disabled={page === '...'}
         >
           {page}
         </button>

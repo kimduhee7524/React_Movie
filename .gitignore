@@ -26,3 +26,10 @@ dist-ssr
 
 .env
 .env.*
+
+# Next.js
+.next
+next-env.d.ts
+build
+# Sentry Config File
+.env.sentry-build-plugin

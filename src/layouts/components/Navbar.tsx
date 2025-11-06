@@ -1,4 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { NAV_LINKS } from '@/constants/navLinks';
 import { LANGUAGE_OPTIONS } from '@/constants/selectOptions';
 import { useLanguageStore } from '@/stores/useLanguageStore';
@@ -8,7 +11,7 @@ import SelectBox from '@/components/share/SelectBox';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Navbar() {
-  const location = useLocation();
+  const pathname = usePathname();
   const { language, setLanguage } = useLanguageStore();
   const queryClient = useQueryClient();
 
@@ -31,10 +34,10 @@ export default function Navbar() {
             {NAV_LINKS.map(({ path, label }) => (
               <Link
                 key={path}
-                to={path}
-                aria-current={location.pathname === path ? 'page' : undefined}
+                href={path}
+                aria-current={pathname === path ? 'page' : undefined}
                 className={`text-sm font-semibold px-3 py-2 rounded-xl transition-all duration-300 hip-hover ${
-                  location.pathname === path
+                  pathname === path
                     ? 'text-accent bg-accent/10 neon-border'
                     : 'text-muted-foreground hover:text-accent hover:bg-accent/5'
                 }`}

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Toast 에러 처리가 포함된 useQuery 래퍼
  * - throwOnError: false + 자동 Toast 처리

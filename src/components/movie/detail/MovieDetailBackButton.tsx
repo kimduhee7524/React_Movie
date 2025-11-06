@@ -1,5 +1,8 @@
+'use client';
+
 import { ArrowLeft } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface BackButtonProps {
   to?: string;
@@ -12,13 +15,13 @@ export default function BackButton({
   onClick,
   className = 'relative z-20 p-6',
 }: BackButtonProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleBack = () => {
     if (onClick) {
       onClick();
     } else {
-      navigate(-1); // 기본값: 이전 페이지로
+      router.back(); // 기본값: 이전 페이지로
     }
   };
 
@@ -33,7 +36,7 @@ export default function BackButton({
     <div className={className}>
       {to ? (
         <Link
-          to={to}
+          href={to}
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
         >
           {buttonContent}

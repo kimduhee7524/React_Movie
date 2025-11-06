@@ -1,5 +1,6 @@
 import {
   useSuspenseInfiniteQuery,
+  useInfiniteQuery,
   useSuspenseQuery,
   useQuery,
 } from '@tanstack/react-query';
@@ -22,7 +23,7 @@ export const usePopularMovies = (params: GetMoviesParams = {}) => {
 };
 
 export const usePopularMoviesInfinite = (language = 'en-US') => {
-  return useSuspenseInfiniteQuery(movieQueries.popularInfinite(language));
+  return useInfiniteQuery(movieQueries.popularInfinite(language));
 };
 
 export const useSearchMoviesInfinite = (params: GetSearchMoviesParams) => {

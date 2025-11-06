@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * 에러 핸들러 Hook
  * - Query/Mutation 에러를 Toast로 처리

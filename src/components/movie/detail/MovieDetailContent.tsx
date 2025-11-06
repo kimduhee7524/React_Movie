@@ -1,3 +1,5 @@
+'use client';
+
 import { useMovieDetail } from '@/hooks/useMovies';
 import { useLanguageStore } from '@/stores/useLanguageStore';
 import MovieDetailHeader from './MovieDetailHeader';
@@ -7,7 +9,7 @@ import MovieDetailCompanies from './MovieDetailCompanies';
 import MovieDetailLinks from './MovieDetailLinks';
 import MovieAIRecommendationsContent from './MovieAIRecommendationsContent';
 
-const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
+const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL;
 
 interface MovieDetailContentProps {
   movieId: number;

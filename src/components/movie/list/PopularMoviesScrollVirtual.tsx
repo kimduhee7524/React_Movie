@@ -1,3 +1,5 @@
+'use client';
+
 import { VirtuosoGrid } from 'react-virtuoso';
 import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '../../skeleton/MoviesSkeleton';
@@ -28,8 +30,8 @@ const PopularMoviesScrollVirtual = () => {
       components={{
         Footer: () =>
           isFetchingNextPage ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-              <MoviesSkeleton />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+              <MoviesSkeleton count={8} />
             </div>
           ) : null,
       }}

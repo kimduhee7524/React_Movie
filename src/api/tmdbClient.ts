@@ -1,14 +1,27 @@
 import axios from 'axios';
 
-const ACCESS_TOKEN = import.meta.env.VITE_API_TOKEN;
-export const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+export const TMDB_BASE_URL = '/api/tmdb';
 const TIMEOUT = 30000;
 
 export const tmdbClient = axios.create({
   baseURL: TMDB_BASE_URL,
   headers: {
     Accept: 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
   },
   timeout: TIMEOUT,
 });
+
+// TMDB API 호출을 위한 헬퍼 함수
+export const callTmdbApi = async (
+  endpoint: string,
+  params?: Record<string, string>
+) => {
+  const searchParams = new URLSearchParams({
+    endpoint,
+    ...params,
+  });
+
+  const response = await tmdbClient.get(`?${searchParams.toString()}`);
+  return response.data;
+};
+

@@ -1,3 +1,5 @@
+'use client';
+
 import { BaseError, getErrorContent, classifyError } from '@/errors';
 
 interface ErrorFallbackProps {
@@ -22,7 +24,7 @@ export default function ErrorFallback({
   const errorKind = classifyError(error);
 
   // 개발 환경에서만 상세 정보 표시
-  const showDetails = import.meta.env.DEV;
+  const showDetails = process.env.NODE_ENV !== 'production';
 
   return (
     <div className="p-6 bg-red-50 border border-red-300 rounded-lg text-red-700 max-w-2xl mx-auto my-8 overflow-hidden">

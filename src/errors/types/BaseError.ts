@@ -7,6 +7,9 @@ export interface ErrorMetadata {
   componentStack?: string;
   additionalData?: Record<string, unknown>;
   redirectTo?: string; // 에러 후 리다이렉트 경로
+  isServerSide?: boolean; // 서버 사이드에서 발생한 에러인지
+  apiRoute?: boolean; // API 라우트에서 발생한 에러인지
+  serverAction?: boolean; // 서버 액션에서 발생한 에러인지
 }
 
 export interface SentryErrorContext {

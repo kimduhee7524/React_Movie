@@ -3,6 +3,7 @@ import { normalizeError } from '../errorNormalize';
 import { reportToSentry } from '../reporting/sentry';
 import { classifyError } from '../errorClassify';
 import { BaseError } from '../types/BaseError';
+import { ErrorCodes } from '../types/errorCodes';
 
 /**
  * 서버 컴포넌트에서 사용할 에러 처리 유틸리티
@@ -42,7 +43,7 @@ export function handleServerError(
 
     // 서버 환경 메타데이터 추가
     normalizedError.metadata.isServerSide = true;
-    normalizedError.metadata.timestamp = new Date().toISOString();
+    normalizedError.metadata.timestamp = new Date();
 
     // 서버에서 console.error 로깅 및 Sentry 리포팅
     console.error('[Server Error]', {
@@ -58,7 +59,7 @@ export function handleServerError(
     });
 
     // 404 처리
-    if (callNotFound || normalizedError.code === 'RESOURCE_NOT_FOUND') {
+    if (callNotFound || normalizedError.code === ErrorCodes.API_NOT_FOUND) {
       notFound();
     }
 

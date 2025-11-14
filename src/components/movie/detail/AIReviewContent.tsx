@@ -1,3 +1,5 @@
+'use client';
+
 import ReactMarkdown from 'react-markdown';
 import { useMovieDetail, useSuspenseAIMovieReview } from '@/hooks/useMovies';
 import { useLanguageStore } from '@/stores/useLanguageStore';

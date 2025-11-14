@@ -39,7 +39,7 @@ export const movieQueries = {
         `popular-${params.language || 'en-US'}-${params.page || 1}`
       ),
       queryFn: () => getPopularMovies(params),
-      staleTime: 1000 * 60 * 5,
+      staleTime: 0,
     }),
 
   // 인기 영화 무한스크롤
@@ -57,7 +57,7 @@ export const movieQueries = {
         const next = lastPage.page + 1;
         return next <= lastPage.total_pages ? next : undefined;
       },
-      staleTime: 1000 * 60 * 3,
+      staleTime: 0,
     }),
 
   // 영화 검색
@@ -89,7 +89,7 @@ export const movieQueries = {
     queryOptions<MovieDetailType, Error>({
       queryKey: movieQueries.keys.detail(movieId, language),
       queryFn: () => getMovieDetail(movieId, language),
-      staleTime: 1000 * 60 * 10,
+      staleTime: 0,
     }),
 
   // AI 영화 추천
@@ -107,7 +107,7 @@ export const movieQueries = {
     queryOptions<string, Error>({
       queryKey: movieQueries.keys.aiReview(movie.id),
       queryFn: () => getAIMovieReview(movie),
-      staleTime: 1000 * 60 * 10,
+      staleTime: 0,
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     }),

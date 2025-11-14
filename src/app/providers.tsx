@@ -49,8 +49,12 @@ export function ReactQueryProvider({ children }: ReactQueryProviderProps) {
           </ErrorBoundary>
         </main>
       </div>
-      {isClient && process.env.NODE_ENV === 'development' && (
-        <ReactQueryDevtools initialIsOpen={false} />
+      {isClient && (
+        <ReactQueryDevtools
+          initialIsOpen={true}
+          buttonPosition="bottom-right"
+          position="bottom"
+        />
       )}
     </QueryClientProvider>
   );

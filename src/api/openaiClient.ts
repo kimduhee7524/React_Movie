@@ -1,41 +1,74 @@
-import axios from 'axios';
+import { OpenAIOptions, OpenAIResponse, OpenAIProxyResponse } from '@/types/openai';
 
-// 🔒 프록시 API를 사용하여 보안 강화 (API 키 서버에서만 사용)
-export const OPENAI_BASE_URL = '/api/openai';
-const TIMEOUT = 60000;
+const OPENAI_API_BASE = 'https://api.openai.com/v1';
 
-export const openaiClient = axios.create({
-  baseURL: OPENAI_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: TIMEOUT,
-});
-
-interface OpenAIProxyResponse {
-  content: string;
-  usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-  };
-}
-
-interface OpenAIOptions {
-  model?: string;
-  max_tokens?: number;
-  temperature?: number;
+function getOpenAIApiKey(): string {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not defined');
+  }
+  return apiKey;
 }
 
 export const callOpenAI = async (
   prompt: string,
   options?: OpenAIOptions
 ): Promise<string> => {
-  const response = await openaiClient.post<OpenAIProxyResponse>('/', {
-    prompt,
-    options,
-  });
+  const isClient = typeof window !== 'undefined';
 
-  return response.data.content || '';
+  const defaultOptions = {
+    model: 'gpt-4o-mini',
+    max_tokens: 1000,
+    temperature: 0.7,
+  };
+
+  const mergedOptions = { ...defaultOptions, ...options };
+
+  if (isClient) {
+    // 클라이언트 사이드: API Route 사용
+    const response = await fetch('/api/openai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        options: mergedOptions,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as OpenAIProxyResponse;
+    return data.content || '';
+  } else {
+    // 서버 사이드: OpenAI 직접 호출
+    const apiKey = getOpenAIApiKey();
+
+    const response = await fetch(`${OPENAI_API_BASE}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        ...mergedOptions,
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as OpenAIResponse;
+    return data.choices?.[0]?.message?.content || '';
+  }
 };
-

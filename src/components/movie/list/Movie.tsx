@@ -4,6 +4,7 @@ import fallbackPoster from '@/assets/tempMovie.png';
 import { MovieType, SearchedMovieType } from '@/types/movie';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 
 const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL;
@@ -18,8 +19,11 @@ export default function Movie({
     : fallbackPoster;
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
+  const params = useParams();
+  const lang = (params?.lang as string) || 'ko';
+
   return (
-    <Link href={`/movie/${movie.id}`} className="block">
+    <Link href={`/${lang}/movie/${movie.id}`} className="block">
       <div className="group w-full bg-card/80 backdrop-blur-sm rounded-3xl overflow-hidden hip-hover neon-border hover:glow-purple transition-all duration-500 cursor-pointer">
         <div className="relative overflow-hidden aspect-[2/3]">
           <Image

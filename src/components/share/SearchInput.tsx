@@ -1,12 +1,14 @@
 'use client';
 
 import { useRef, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { validateSearchKeyword } from '@/utils/validate';
 import { useDebouncedValidator } from '@/hooks/useDebouncedValidator';
 
 export default function SearchInput() {
   const router = useRouter();
+  const params = useParams();
+  const lang = (params?.lang as string) || 'ko';
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
 
@@ -41,7 +43,7 @@ export default function SearchInput() {
     try {
       setError('');
       const encodedKeyword = encodeURIComponent(keyword.trim());
-      router.push(`/search?query=${encodedKeyword}`);
+      router.push(`/${lang}/search?query=${encodedKeyword}`);
       if (inputRef.current) inputRef.current.value = '';
     } catch {
       setError('검색 중 오류가 발생했습니다. 다시 시도해주세요.');

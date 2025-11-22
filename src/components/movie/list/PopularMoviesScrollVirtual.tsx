@@ -3,19 +3,33 @@
 import { VirtuosoGrid } from 'react-virtuoso';
 import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '../../skeleton/MoviesSkeleton';
-import { usePopularMoviesInfinite } from '@/hooks/useMovies';
-import { useLanguageStore } from '@/stores/useLanguageStore';
-import { MovieType } from '@/types/movie';
+import { MovieType, MovieResponse } from '@/types/movie';
+import { useSuspensePopularMoviesInfinite } from '@/hooks/useMovies';
 
-const PopularMoviesScrollVirtual = () => {
-  const { language } = useLanguageStore();
+interface PopularMoviesScrollVirtualProps {
+  initialData: MovieResponse;
+  language: string;
+}
+
+const PopularMoviesScrollVirtual = ({
+  initialData,
+  language,
+}: PopularMoviesScrollVirtualProps) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    usePopularMoviesInfinite(language);
+    useSuspensePopularMoviesInfinite(
+      { language },
+      {
+        initialData: {
+          pages: [initialData],
+          pageParams: [1],
+        },
+      }
+    );
 
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
 
   return (
-    <VirtuosoGrid
+    <VirtuosoGrid<MovieType>
       useWindowScroll
       data={movies}
       endReached={() => {

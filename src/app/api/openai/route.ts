@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
+import { OpenAIOptions } from '@/types/openai';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 

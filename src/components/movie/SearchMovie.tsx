@@ -3,20 +3,40 @@
 import { VirtuosoGrid } from 'react-virtuoso';
 import { useSearchParams } from 'next/navigation';
 import { useSearchMoviesInfinite } from '@/hooks/useMovies';
-import { useLanguageStore } from '@/stores/useLanguageStore';
 import Movie from '@/components/movie/list/Movie';
 import MoviesSkeleton from '@/components/skeleton/MoviesSkeleton';
-import { SearchedMovieType } from '@/types/movie';
+import { SearchedMovieType, SearchMovieResponse } from '@/types/movie';
 
-export default function SearchMovie() {
+interface SearchMovieProps {
+  initialData: SearchMovieResponse;
+}
+
+export default function SearchMovie({ initialData }: SearchMovieProps) {
   const searchParams = useSearchParams();
   const query = searchParams?.get('query')?.trim() || '';
-  const { language } = useLanguageStore();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSearchMoviesInfinite({ query, language });
+    useSearchMoviesInfinite(
+      { query, language: 'ko-KR' },
+      {
+        initialData: {
+          pages: [initialData],
+          pageParams: [1],
+        },
+      }
+    );
 
   const movies = data?.pages.flatMap((page) => page.results) ?? [];
+
+  if (movies.length === 0 && !isFetchingNextPage) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-muted-foreground text-lg">
+          "{query}"에 대한 검색 결과가 없습니다.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <VirtuosoGrid<SearchedMovieType>

@@ -2,6 +2,8 @@ export * from './classes/ApiError';
 export * from './classes/NetworkError';
 export * from './classes/ClientError';
 export * from './classes/UnknownError';
+export * from './classes/ServerError';
+export type { ClientErrorResponse } from './classes/ServerError';
 
 export * from './types/errorCodes';
 export * from './types/BaseError';
@@ -27,6 +29,10 @@ export {
   setupGlobalErrorHandlers,
   handleError,
   handleReactError,
+  handleServerError,
+  handleServerActionError,
+  createServerErrorResponse,
+  type ServerErrorConfig,
 } from './errorHandlers';
 
 export {
@@ -43,10 +49,3 @@ export {
 } from './errorUI';
 
 export { classifyError } from './errorClassify';
-
-// Server-side error handling
-export {
-  handleServerError,
-  createErrorResponse,
-  handleServerActionError,
-} from './server/serverErrorHandler';

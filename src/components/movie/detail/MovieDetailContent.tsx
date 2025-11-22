@@ -1,26 +1,24 @@
-'use client';
-
-import { useMovieDetail } from '@/hooks/useMovies';
-import { useLanguageStore } from '@/stores/useLanguageStore';
+import { MovieDetailType } from '@/types/movie';
 import MovieDetailHeader from './MovieDetailHeader';
 import MovieDetailPoster from './MovieDetailPoster';
 import MovieDetailOverview from './MovieDetailOverview';
 import MovieDetailCompanies from './MovieDetailCompanies';
 import MovieDetailLinks from './MovieDetailLinks';
 import MovieAIRecommendationsContent from './MovieAIRecommendationsContent';
+import { Suspense } from 'react';
+import AIRecommendationsLoadingSkeleton from '@/components/skeleton/AIRecommendationsLoadingSkeleton';
 
 const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL;
 
 interface MovieDetailContentProps {
-  movieId: number;
+  movieDetail: MovieDetailType;
+  lang: string;
 }
 
 export default function MovieDetailContent({
-  movieId,
+  movieDetail: movie,
+  lang,
 }: MovieDetailContentProps) {
-  const { language } = useLanguageStore();
-  const { data: movie } = useMovieDetail(movieId, language);
-
   return (
     <>
       {movie.backdrop_path && (
@@ -39,7 +37,7 @@ export default function MovieDetailContent({
           <MovieDetailPoster movie={movie} />
 
           <div className="lg:col-span-2 space-y-8">
-            <MovieDetailHeader movie={movie} />
+            <MovieDetailHeader movie={movie} lang={lang} />
             <MovieDetailOverview movie={movie} />
             <MovieDetailCompanies movie={movie} />
             <MovieDetailLinks movie={movie} />
@@ -47,7 +45,9 @@ export default function MovieDetailContent({
         </div>
 
         <div className="mt-12">
-          <MovieAIRecommendationsContent movie={movie} />
+          <Suspense fallback={<AIRecommendationsLoadingSkeleton />}>
+            <MovieAIRecommendationsContent movie={movie} />
+          </Suspense>
         </div>
       </div>
     </>

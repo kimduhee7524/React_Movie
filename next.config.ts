@@ -2,12 +2,37 @@ import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // SSR 활성화 - output: 'export' 제거됨
-  trailingSlash: true, // URL 끝에 슬래시 추가 (선택사항)
+  trailingSlash: true,
+  cacheComponents: true,
+
+  experimental: {
+    serverComponentsHmrCache: false,
+  },
 
   images: {
-    // 이미지 최적화 활성화 (SSR에서는 사용 가능)
-    domains: ['image.tmdb.org'], // TMDB 이미지 도메인 허용
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+    formats: ['image/webp', 'image/avif'],
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/api/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=1800, stale-while-revalidate=3600', // 30분 캐시, 1시간 stale
+          },
+        ],
+      },
+    ];
   },
 };
 

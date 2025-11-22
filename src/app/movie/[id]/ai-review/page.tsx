@@ -1,29 +1,27 @@
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, use } from 'react';
+import { useRouter } from 'next/navigation';
 import BackButton from '@/components/share/BackButton';
 import AIHeader from '@/components/share/AIHeader';
 import AIReviewContent from '@/components/movie/detail/AIReviewContent';
-import { getMovieDetail } from '@/api/movies';
-import { notFound } from 'next/navigation';
 
 interface AIReviewPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function AIReviewPage({ params }: AIReviewPageProps) {
-  const { id } = await params;
+export default function AIReviewPage({ params }: AIReviewPageProps) {
+  const { id } = use(params);
+  const router = useRouter();
   const movieIdNumber = id ? parseInt(id, 10) : 0;
 
-  if (!movieIdNumber || movieIdNumber <= 0) {
-    notFound();
-  }
-
-  const movieDetail = await getMovieDetail(movieIdNumber, 'ko-KR', {
-    cache: 'force-cache', // 영구 캐시 
-  });
+  const handleGoBack = () => {
+    router.push(`/movie/${id}`);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <BackButton to={`/movie/${id}`} />
+      <BackButton onClick={handleGoBack} />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-12">
         <div className="bg-card/50 backdrop-blur-sm rounded-xl p-8 border border-border/50">
@@ -43,7 +41,7 @@ export default async function AIReviewPage({ params }: AIReviewPageProps) {
               </div>
             }
           >
-            <AIReviewContent movie={movieDetail} />
+            <AIReviewContent movieId={movieIdNumber} />
           </Suspense>
         </div>
       </div>

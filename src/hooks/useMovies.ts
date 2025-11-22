@@ -1,41 +1,52 @@
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import {
+  useSuspenseInfiniteQuery,
+  useInfiniteQuery,
+  useSuspenseQuery,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   GetSearchMoviesParams,
   GetMoviesParams,
-  SearchMovieResponse,
-  MovieResponse,
+  MovieDetailType,
 } from '@/types/movie';
 import { movieQueries } from '@/queries/movieQueries';
 
-export const useSuspensePopularMoviesInfinite = (
-  params: GetMoviesParams,
-  options?: {
-    initialData?: {
-      pages: MovieResponse[];
-      pageParams: number[];
-    };
-  }
-) => {
-  return useSuspenseInfiniteQuery({
-    ...movieQueries.popularInfinite(params.language || 'en-US'),
-    ...options,
+export const useSuspensePopularMovies = (params: GetMoviesParams = {}) => {
+  return useSuspenseQuery({
+    ...movieQueries.popular(params),
+    select: (data) => data.results,
   });
 };
 
-export const useSearchMoviesInfinite = (
-  params: GetSearchMoviesParams,
-  options?: {
-    initialData?: {
-      pages: SearchMovieResponse[];
-      pageParams: number[];
-    };
-  }
-) => {
-  return useSuspenseInfiniteQuery({
-    ...movieQueries.searchInfinite({
+export const usePopularMovies = (params: GetMoviesParams = {}) => {
+  return useQuery(movieQueries.popular(params));
+};
+
+export const usePopularMoviesInfinite = (language = 'en-US') => {
+  return useInfiniteQuery(movieQueries.popularInfinite(language));
+};
+
+export const useSearchMoviesInfinite = (params: GetSearchMoviesParams) => {
+  return useSuspenseInfiniteQuery(
+    movieQueries.searchInfinite({
       query: params.query,
       language: params.language || 'en-US',
-    }),
-    ...options,
-  });
+    })
+  );
+};
+
+export const useMovieDetail = (movieId: number, language = 'en-US') => {
+  return useSuspenseQuery(movieQueries.detail(movieId, language));
+};
+
+export const useSearchMovies = (params: GetSearchMoviesParams) => {
+  return useQuery(movieQueries.search(params));
+};
+
+export const useSuspenseAIMovieRecommendations = (movie: MovieDetailType) => {
+  return useSuspenseQuery(movieQueries.aiRecommendations(movie));
+};
+
+export const useSuspenseAIMovieReview = (movie: MovieDetailType) => {
+  return useSuspenseQuery(movieQueries.aiReview(movie));
 };

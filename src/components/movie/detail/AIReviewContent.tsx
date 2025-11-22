@@ -1,13 +1,19 @@
 import ReactMarkdown from 'react-markdown';
-import { MovieDetailType } from '@/types/movie';
-import { getAIMovieReview } from '@/api/aiRecommendations';
+import { useMovieDetail, useSuspenseAIMovieReview } from '@/hooks/useMovies';
+import { useLanguageStore } from '@/stores/useLanguageStore';
 
 interface AIReviewContentProps {
-  movie: MovieDetailType;
+  movieId: number;
 }
 
-export default async function AIReviewContent({ movie }: AIReviewContentProps) {
-  const aiReview = await getAIMovieReview(movie);
+export default function AIReviewContent({ movieId }: AIReviewContentProps) {
+  const { language } = useLanguageStore();
+
+  // 영화 상세 정보 가져오기
+  const { data: movie } = useMovieDetail(movieId, language);
+
+  // AI 리뷰 가져오기
+  const { data: aiReview } = useSuspenseAIMovieReview(movie);
 
   return (
     <div className="prose prose-lg dark:prose-invert max-w-none">

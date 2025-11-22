@@ -1,3 +1,5 @@
+// import { Nullable } from './utils'; // 더 이상 사용하지 않음
+
 interface BaseMovieType {
   id: number;
   title: string;

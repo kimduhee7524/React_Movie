@@ -7,4 +7,5 @@ export async function register() {
   }
 }
 
+// Next.js 16에서 에러 자동 캐처
 export const onRequestError = Sentry.captureRequestError;

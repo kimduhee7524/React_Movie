@@ -1,3 +1,5 @@
+'use client';
+
 import { Star, Calendar, Clock, Globe, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { MovieDetailType } from '@/types/movie';
@@ -5,11 +7,9 @@ import { formatRuntime } from '@/utils/formatters';
 
 interface MovieDetailHeaderProps {
   movie: MovieDetailType;
-  lang: string;
 }
 
-export default function MovieDetailHeader({ movie, lang }: MovieDetailHeaderProps) {
-
+export default function MovieDetailHeader({ movie }: MovieDetailHeaderProps) {
   return (
     <div className="space-y-4">
       <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
@@ -65,7 +65,7 @@ export default function MovieDetailHeader({ movie, lang }: MovieDetailHeaderProp
 
       <div className="pt-4">
         <Link
-          href={`/${lang}/movie/${movie.id}/ai-review`}
+          href={`/movie/${movie.id}/ai-review`}
           className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
         >
           <Sparkles className="h-5 w-5" />

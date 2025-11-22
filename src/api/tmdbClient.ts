@@ -1,79 +1,63 @@
-import axios from 'axios';
-
-const TIMEOUT = 30000;
 const TMDB_API_BASE = 'https://api.themoviedb.org/3';
 
-const getBaseURL = (): string => {
-  // 클라이언트 사이드: 상대 경로로 프록시 사용
-  if (typeof window !== 'undefined') {
-    return '/api/tmdb';
+function getTmdbToken(): string {
+  const token = process.env.TMDB_API_TOKEN;
+  if (!token) {
+    throw new Error('TMDB_API_TOKEN is not defined');
   }
+  return token;
+}
 
-  // 서버 사이드 - 런타임에서 프록시 사용 설정이 있으면 자체 API 라우트 사용
-  if (
-    process.env.NEXT_PUBLIC_USE_PROXY === 'true' &&
-    process.env.NEXT_PUBLIC_SITE_URL
-  ) {
-    return `${process.env.NEXT_PUBLIC_SITE_URL}/api/tmdb`;
-  }
-
-  // 빌드 타임 또는 프록시 미사용 시: TMDB 직접 호출
-  return TMDB_API_BASE;
-};
-
-export const TMDB_BASE_URL = getBaseURL();
-
-const getApiToken = (): string => {
-  return process.env.TMDB_API_TOKEN || '';
-};
-
-// 헤더 설정: 직접 TMDB API 호출 시 Authorization 헤더 포함
-const getHeaders = () => {
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-  };
-
-  // TMDB 직접 호출 시 Authorization 헤더 추가
-  if (TMDB_BASE_URL === TMDB_API_BASE) {
-    const token = getApiToken();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-  }
-
-  return headers;
-};
-
-export const tmdbClient = axios.create({
-  baseURL: TMDB_BASE_URL,
-  headers: getHeaders(),
-  timeout: TIMEOUT,
-});
-
-// TMDB API 호출을 위한 헬퍼 함수
-export const callTmdbApi = async (
+export async function fetchTmdb<T>(
   endpoint: string,
-  params?: Record<string, string>
-) => {
-  const isUsingProxy = TMDB_BASE_URL.includes('/api/tmdb');
+  params?: Record<string, string | number>,
+  options?: {
+    next?: NextFetchRequestConfig;
+    cache?: RequestCache;
+  }
+): Promise<T> {
+  const isClient = typeof window !== 'undefined';
 
-  if (isUsingProxy) {
-    // 프록시 사용 시
+  if (isClient) {
+    // 클라이언트 사이드: API Route 사용
     const searchParams = new URLSearchParams({
       endpoint,
       ...params,
     });
-    const response = await tmdbClient.get(`?${searchParams.toString()}`);
-    return response.data;
+
+    const response = await fetch(`/api/tmdb/?${searchParams.toString()}`);
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
   } else {
-    // TMDB 직접 호출 시 (Authorization 헤더는 이미 설정됨)
+    // 서버 사이드: TMDB 직접 호출
     const searchParams = new URLSearchParams({
       language: 'ko-KR',
       ...params,
     });
-    const response = await tmdbClient.get(
-      `${endpoint}?${searchParams.toString()}`
-    );
-    return response.data;
+
+    const url = `${TMDB_API_BASE}${endpoint}?${searchParams.toString()}`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getTmdbToken()}`,
+        Accept: 'application/json',
+      },
+      next: options?.next || {
+        revalidate: 60, // 기본 1분 캐시
+      },
+      cache: options?.cache,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `TMDB API Error: ${response.status} ${response.statusText}`
+      );
+    }
+
+    return response.json();
   }
-};
+}

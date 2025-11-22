@@ -1,4 +1,4 @@
-import { callTmdbApi } from '@/api/tmdbClient';
+import { fetchTmdb } from '@/api/tmdbClient';
 import {
   MovieResponse,
   GetMoviesParams,
@@ -7,33 +7,45 @@ import {
   MovieDetailType,
 } from '@/types/movie';
 
-export const getPopularMovies = async ({
-  page = 1,
-  language = 'en-US',
-}: GetMoviesParams): Promise<MovieResponse> => {
-  return await callTmdbApi('/movie/popular', {
-    page: page.toString(),
-    language,
-  });
+export const getPopularMovies = async (
+  { page = 1, language = 'ko-KR' }: GetMoviesParams,
+  options?: { next?: NextFetchRequestConfig; cache?: RequestCache }
+): Promise<MovieResponse> => {
+  return fetchTmdb<MovieResponse>(
+    '/movie/popular',
+    {
+      page,
+      language,
+    },
+    options
+  );
 };
 
-export const getSearchMovies = async ({
-  query,
-  language = 'en-US',
-  page = 1,
-}: GetSearchMoviesParams): Promise<SearchMovieResponse> => {
-  return await callTmdbApi('/search/movie', {
-    query,
-    language,
-    page: page.toString(),
-  });
+export const getSearchMovies = async (
+  { query, language = 'ko-KR', page = 1 }: GetSearchMoviesParams,
+  options?: { next?: NextFetchRequestConfig; cache?: RequestCache }
+): Promise<SearchMovieResponse> => {
+  return fetchTmdb<SearchMovieResponse>(
+    '/search/movie',
+    {
+      query,
+      language,
+      page,
+    },
+    options
+  );
 };
 
 export const getMovieDetail = async (
   movieId: number,
-  language = 'en-US'
+  language = 'ko-KR',
+  options?: { next?: NextFetchRequestConfig; cache?: RequestCache }
 ): Promise<MovieDetailType> => {
-  return await callTmdbApi(`/movie/${movieId}`, {
-    language,
-  });
+  return fetchTmdb<MovieDetailType>(
+    `/movie/${movieId}`,
+    {
+      language,
+    },
+    options
+  );
 };

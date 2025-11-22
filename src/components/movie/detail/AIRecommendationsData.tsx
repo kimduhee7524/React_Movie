@@ -1,15 +1,12 @@
-import { useSuspenseAIMovieRecommendations } from '@/hooks/useMovies';
-import { MovieDetailType } from '@/types/movie';
+import { AIRecommendation } from '@/types/movie';
 
 interface AIRecommendationsDataProps {
-  movie: MovieDetailType;
+  recommendations: AIRecommendation[];
 }
 
 export default function AIRecommendationsData({
-  movie,
+  recommendations,
 }: AIRecommendationsDataProps) {
-  const { data: recommendations } = useSuspenseAIMovieRecommendations(movie);
-
   return (
     <>
       {recommendations && recommendations.length > 0 ? (
@@ -51,7 +48,7 @@ export default function AIRecommendationsData({
           {/* AI 추천 정보 */}
           <div className="mt-6 p-3 bg-muted/30 rounded-lg border border-border/30">
             <p className="text-xs text-muted-foreground text-center">
-              🤖 이 추천은 AI가 "{movie.title}"의 장르, 줄거리, 평점을 분석하여
+              🤖 이 추천은 AI가 영화의 장르, 줄거리, 평점을 분석하여
               생성했습니다
             </p>
           </div>
